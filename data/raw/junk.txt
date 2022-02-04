@@ -1,0 +1,618 @@
+/usr/bin/python3 "/Users/samosebe/Code/homeless shelter/cleanup.py"
+Found ARCH Day Shelter TX
+Found Alfred Washburn Center FL
+Found Corona Norco Rescue Mission CA
+Found House of Hope of the Pee Dee SC
+Found Arlington Street People's Assistance Network - Emergency Shelter VA
+Found Austin Street Center TX
+Found Berkeley Food And Housing Project - Men's Overnight Shelter (for Men) CA
+Found Bay Area Rescue Mission - Recovery Program CA
+Found Bay Area Rescue Mission - Center for Women & Children CA
+Found Bethesda Center For The Homeless - Day Shelter & Night Shelter NC
+Found Bethesda House Of Schenectady NY
+Found Bethesda Mission - Men's Shelter (for Men) PA
+Found YWCA of Greater Harrisburg - Emergency Shelter PA
+Found YWCA Shelter for Battered Women IL
+Found Bridgeport Rescue Mission Bridgeport CT
+Found Dorothy Day Hospitality House MN
+Found Bakersfield Homeless Center CA
+Found Carriage Town Ministries Family Shelter MI
+Found Carthage Crisis Center MO
+Found Casa Youth Shelter CA
+Found Casa de Clara San Jose Catholic Worker CA
+Found Catherine H. Barber Memorial Homeless Shelter NC
+Found Samaritan House Homeless Shelter CO
+Found Central County Interim Housing Program - Concord Shelter CA
+Found Charlotte Emergency Housing NC
+Found Christian Caring Center NJ
+Found The City Mission - Crossroads: Men's Ministries (for Men) OH
+Found City Mission Women's Emergency Shelter PA
+Found City Union Mission - Women And Family Shelter MO
+Found New Futures Family Lodge Huntsville AL
+Found RCS Homeless Shelter New Bern NC
+Found One80 Place Shelter Charleston SC
+Found Detroit Rescue Mission Ministries -  Emergency Shelter MI
+Found Danville Rescue Mission IL
+Found Daytona Rescue Mission FL
+Found Larkin Street Youth Services - Diamond Youth Shelter (for Ages 12 To 17) CA
+Found Doorways - Family Shelter (for Women And Families) VA
+Found Douglas Gardens CMHC Homeless Assistance Program FL
+Found Downtown Women's Center TX
+Found Shelterhouse - The David and Rebecca Barron Center for Men OH
+Found Ruby's Place CA
+Found Emergency Shelter Services MI
+Found Community Services For The Developmentally Disabled - Individual Residential Alternatives Ira NY
+Found The Midnight Mission - Project Safe Sleep CA
+Found Joppa House MI
+Found Faith Farm Residential Program FL
+Found Family Gateway - Annette G. Strauss Family Gateway Center TX
+Found Fort Bend County Women's Center TX
+Found GRIP Greater Richmond Inter-faith Program Richmond CA
+Found Gateway Rescue Mission MS
+Found Genesis Women's Shelter TX
+Found Grand Central Neighborhood Social Services Corporation NY
+Found Greeley Transitional House Greeley CO
+Found Green Hills Community Action Agency - Emergency Shelter (for Women) MO
+Found Barracks of Hope FL
+Found Harvest Center NC
+Found Haven Of Rest Rescue Mission - Haven Lighthouse (for Men) TN
+Found Hill Country Crisis Council TX
+Found Holland Rescue -  Shelter for Women and Women with Children MI
+Found Hope For Families Center FL
+Found Home Of Grace - Men's Campus (for Men) MS
+Found Hope House For Young Adults AL
+Found Hope Rescue Mission PA
+Found Indiana County Community Action Program, Inco Indiana PA
+Found The Inn Between Of Longmont Inc Transitional Housing Longmont CO
+Found InterFaith Emergency Services Shelter FL
+Found Interfaith Nutrition Network - Emergency Shelters NY
+Found Johnson County Family Crisis Center TX
+Found Kansas City Rescue Mission (for Men) MO
+Found YWCA Shelter for Battered Women IL
+Found Knox Area Rescue Ministries - Men's And Women's Residential TN
+Found Family Promise of North Fulton - Dekalb GA
+Found Market Street Mission NJ
+Found Mason County Homeless Shelter WA
+Found YMCA Memphis Family Shelter (for Women And Children) TN
+Found Memphis Union Mission AR
+Found Miracle Hill Ministries - Shepherd's Gate SC
+Found Mission Arlington/mission Metroplex - Day Shelter TX
+Found Morningstar Mission Ministries -  The 180 Club (for Men) IL
+Found Restoration Life Center Emergency Shelter MO
+Found New Testament Mission Emergency Shelter FL
+Found The Bowery Mission - Tribeca Campus NY
+Found Newark Emergency Services For Families - Homeless Drop-in Center NJ
+Found Noel House Women's Referral Center WA
+Found Fort Collins Rescue Mission CO
+Found Open Door Mission - Emergency Shelter (for Men) NY
+Found The Life Center for the Homeless TX
+Found Ozanam Men's Shelter (for Men) NJ
+Found YWCA Shelter for Battered Women IL
+Found Safehaven of Tarrant County TX
+Found Palmetto House Daytona Beach Transitional Housing FL
+Found Panama City Rescue Mission - Jobs Housing For Men And Women FL
+Found Partners In Housing, Inc. Colorado Springs CO
+Found Presbyterian Night Shelter Of Tarrant County TX
+Found Project Hope For The Homeless - Emergency Shelter OH
+Found Project Hospitality - Interfaith Bed Network NJ
+Found Union Gospel Mission - Calvert Place For Men Shelter TX
+Found Raleigh Rescue Mission - Women And Children's Emergency Shelter NC
+Found YWCA Shelter for Battered Women IL
+Found Rescue Mission Alliance Of Syracuse - New Life Day Center NY
+Found Rescue Mission Of Utica - Parker House Residential Center NY
+Found Respond Now Chicago Heights IL
+Found Resurrection House Day Center For Homeless FL
+Found Safe Haven Family Shelter TN
+Found Safehouse Progressive Alliance CO
+Found Salina Rescue Mission - Homeless Shelter (for Men) KS
+Found The Salvation Army Fort Myers Women and Children Shelter FL
+Found Salvation Army MI
+Found Salvation Army MI
+Found The Salvation Army Of Houston - Family Residence TX
+Found Salvation Army of Orlando Men's Lodge - Emergency Shelter FL
+Found Martha Vance Samaritan Outreach Center MO
+Found Samuelâ€™s House Inc. FL
+Found Sanctuary Of Williams County Shelter OH
+Found Hope Place - Seattle Union Gospel Mission WA
+Found LifeMoves - Redwood Family House CA
+Found LifeMoves - First Step For Families CA
+Found Shelters Of Saratoga - Homeless Shelter NY
+Found Shepherd's Gate - New Life Program CA
+Found Shreveport-bossier Rescue Mission LA
+Found Catholic Social Services - St. Anthony's Haven PA
+Found Rosalie House Emergency Shelter CA
+Found Star Of Hope Mission - Women And Family Emergency Shelter TX
+Found Stewpot Community Services - Matt's House (for Women And Children) MS
+Found Sunshine  Ministries - Emergency Shelter (for Men) MO
+Found Sunshine Rescue Mission AZ
+Found Tarboro Community Outreach NC
+Found ARM Ministries TX
+Found Affordable Homes Group NJ
+Found Residential Program Center - serving Arlington County VA
+Found Hilda M. Barg Homeless Prevention Center VA
+Found I Am The Source - Vero Beach FL
+Found Transition House - Emergency Shelter CA
+Found Sojourner House - Homeless Services CA
+Found Union Gospel Mission Of Tarrant County TX
+Found Union Mission Of Roanoke Rapids - Emergency Shelter (for Men) NC
+Found Urban Ministry Center - Room In The Inn NC
+Found Valley Mission, Inc. VA
+Found Howard Mott Center For Men GA
+Found Van Horn Community Christian Shelter TX
+Found Volunteers of America Veterans Housing Lansing MI
+Found Washington City Mission PA
+Found Water Street Mission - Men's Emergency Shelter (for Men) PA
+Found Mobile Rescue Mission AL
+Found Wayside Cross Ministires IL
+Found Western Carolina Rescue Ministries - Men's Recovery NC
+Found Winston Salem Rescue Mission - Men's Shelter NC
+Found Union Gospel Mission - Emergency Shelter MN
+Found Nevada Partnership For Homeless Youth Las Vegas NV
+Found Ascension Family Crisis Shelter LA
+Found Ascension Family Crisis Shelter LA
+Found Ascension Family Crisis Shelter LA
+Found Baton Rouge Alliance For Transitional Living - Kaleidoscope (for Ages 10 To 17) LA
+Found YWCA Shelter for Battered Women IL
+Found Grace At The Greenlight LA
+Found Ascension Family Crisis Shelter LA
+Found Ascension Family Crisis Shelter LA
+Found Midway Shelter For Women and Children CA
+Found Smile Housing Services Transitional Housing LA
+Found Ascension Family Crisis Shelter LA
+Found Caring Center of Slidell LA
+Found Ascension Family Crisis Shelter LA
+Found Family Promise of Bergen County NJ
+Found Baltimore Rescue Mission MD
+Found YWCA Shelter for Battered Women IL
+Found Family Renew Community FL
+Found Family Renew Community FL
+Found Jesse's House - Amherst Emergency Shelter MA
+Found Anchor Inn Homeless Shelter for Men (Pine St) MA
+Found Bartons Crossing Emergency Shelter Transitional Shelter MA
+Found CAROLINA HILL SHELTER MA
+Found Crossroads Family Shelter Chelsea MA MA
+Found Springfield Rescue Mission - Emergency Shelter (for Men) MA
+Found Greenfield Family Inn - Family Homeless Shelter MA
+Found Housing Assistance Corporation Hyannis MA
+Found Boston Rescue Mission - Emergency Shelter MA
+Found YWCA Shelter for Battered Women IL
+Found YWCA Shelter for Battered Women IL
+Found Marlboro Shelter for Men and Women MA
+Found MARY MARTHA MA
+Found 24 HOUR CHILD/AT RISK HOTLINE - C/O Dept. of Social Services MA
+Found Medford Family Life Education Center MA
+Found Noah Shelter - Homeless Shelter for Men and Women MA
+Found Nazareth Residence of Mothers and Children - Homeless Assistance MA
+Found Amesbury Housing Authority Amesbury MA
+Found YWCA Shelter for Battered Women IL
+Found EMERGENCY SHELTER OF GREATER SPRINGFIELD - PROSPECT HOUSE MA
+Found Medway Family Shelter MA
+Found Chardon Street Shelter for Women and Children MA
+Found Housing Assistance Corporation Hyannis MA
+Found Harvard Square Homeless Shelter MA
+Found Faith Mission Of Elkhart - Shelter IN
+Found Bethany House Homeless Shelter IL
+Found The Salvation Army AR
+Found House of Hope Homeless Shelter VA
+Found Las Cruces Gospel Rescue Mission NM
+Found Women's Community Association Domestic Violence Shelter NM
+Found Wayside Christian Mission - Men's Emergency Shelter (for Men) KY
+Found Community Touch, Inc. Bealeton VA
+Found Huntington City Mission - Women And Family Shelter KY
+Found Brookside Family Life Center - Nourished Hearts Emergency Shelter WV
+Found Brookside Family Life Center - Nourished Hearts Emergency Shelter WV
+Found Poverello Center - The Valor House (for Veterans) MT
+Found Rescue Mission - Men's Shelter (for Men) MT
+Found Rescue Mission - Men's Shelter (for Men) MT
+Found The Friendship Center (for Women And Children) MT
+Found Ogden Rescue Mission UT
+Found Wasatch Homeless Health Care Program UT
+Found Waypoint Services - Madge Phillops Center (for Women And Children) IA
+Found St. John Of The Cross - Catholic Worker House IA
+Found Willis Dady Emergency Shelter IA
+Found Boise Rescue Mission - Lighthouse Shelter For Men In Nampa (for Men) ID
+Found Boise Rescue Mission - City Light Home For Women And Children ID
+Found Wyoming Housing Division  WY
+Found Comea House WY
+Found Central Wyoming Rescue Mission WY
+Found Volunteers Of America - Homeless Outreach WY
+Found Welcome Mat Day Center WY
+Found Madison House Of Hope (domestic Violence) (for Men, Women And Children) SD
+Found Gregory County Shelter SD
+Found Communities Against Violence And Abuse (cava) (domestic Violence) SD
+Found People's City Mission - Family Housing Center NE
+Found Open Door Mission  - New Life Recovery Program IA
+Found Columbus Rescue Mission - The Overnight Guest Program NE
+Found Siena Francis House - Homeless Shelter IA
+Found Passages Inc. - Emergency Shelter WI
+Found Hope Gospel Mission - Ruth House (for Women) WI
+Found The Guest House -  (for Men) WI
+Found Sparrow's Nest WI
+Found John W. Graham Emergency Shelter NY
+Found Our Place Drop-in Center NH
+Found Our Place Drop-in Center NH
+Found Tri-county Community Action Program - Tyler Blain House NH
+Found New Horizons For New Hampshire - New Horizons NH
+Found New Horizons For New Hampshire - Angie's Shelter For Women (for Women) NH
+Found Carey House Shelter - Salvation Army Shelter NH
+Found Sojourner House RI
+Found Providence Rescue Mission RI
+Found Domestic Violence Resource Center of South County RI
+Found AIDS CARE OCEAN STATE RI
+Found YWCA Shelter for Battered Women IL
+Found Institute For Human Services, Inc. (ihs) Honolulu HI
+Found ChristNet MI
+Found Bucks County Emergency Homeless Shelter PA
+Found Roark-Sullivan Lifeway Center - Giltinan Center WV
+Found Volunteers Of America Colorado Branch - Durango Community Shelter CO
+Found Transitions South Carolina SC
+Found YWCA Shelter for Battered Women IL
+Found Columbus House CT
+Found YWCA Shelter for Battered Women IL
+Found YWCA Shelter for Battered Women IL
+Found Port Charlotte Homeless Coalition FL
+Found Salvation Army Fort Worth Mabee Center TX
+Found Torres Community Shelter CA
+Found Serenity House of Atlanta Ministries GA
+Found Coordinated Homeless Outreach Center (CHOC) PA
+Found Jenesse Center CA
+Found Joshua's Haven City Mission PA
+Found St. Paul's Community Center OH
+Found TOLEDO GOSPEL RESCUE MISSION MENS SHELTER OH
+Found Community Services Program of Beaver County PA
+Found Randy Sams Homeless Outreach Shelter AR
+Found Orange County Rescue Mission - Hope Family Housing CA
+Found Illinois Valley Public Action To Deliver Shelter IL
+Found Mission in Citrus Inc Shelter FL
+Found Miller Community House OH
+Found FAMILY RESOURCE CENTER MA
+Found Good Samaritan Ministries Carbondale IL
+Found Jacob's Place Homeless Mission AR
+Found Haven for Hope TX
+Found Aspen Homeless Shelter CO
+Found YWCA Shelter for Battered Women IL
+Found The Christian Center IN
+Found RCS Homeless Shelter New Bern NC
+Found The Swan House OH
+Found Godtel Ministries TX
+Found Livermore Homeless Refuge - Cold Weather Shelter CA
+Found COTS Mary Isaak Center CA
+Found Clara White Mission FL
+Found Portsmouth Volunteers for the Homeless VA
+Found Saving Grace Shelter PA
+Found Union Rescue Mission CA
+Found Lima Rescue Mission Lima OH
+Found Grace of God Rescue Mission NC
+Found Emma Cares, Inc. GA
+Found Atlantic City Rescue Mission - Emergency Shelter NJ
+Found Our Father's House Homeless Shelter for men and women MA
+Found Welcome House of South County Emergency Shelter RI
+Found Good Neighbor Center OR
+Found Modesto Gospel Mission - Single Father With Children Shelter (for Men And Children) CA
+Found Path of Life Ministries Recovery Home CA
+Found Evangel Home - Cross Roads CA
+Found Cityteam Chester Of Philadelphia - Recovery Program (for Men) NJ
+Found Hope House of Salem Oregon OR
+Found My Father's House Community Shelter OR
+Found Hope House of Manitowoc County WI
+Found United Communities Against Poverty Capitol Heights MD
+Found The Rose - Women with Children Emergency Shelter CA
+Found Evas Kitchen and Sheltering Halfway House, Transitional Housing, Emergency Shelter NJ
+Found Bethlehem Inn OR
+Found Malta House,Inc CT
+Found Cedar Valley Hospitality House IA
+Found St. Herman House OH
+Found St. Elizabeth's Recovery Residence PA
+Found Providence House NY
+Found Hudson River Lodging NY
+Found Brooks Street Family Shelter CT
+Found New Milford Shelter Coalition Transitional Housing CT
+Found Salvation Army Red Shield Lodge Fort Lauderdale FL
+Found Covenant House - Transitional Housing Fort Lauderdale FL
+Found Broward Outreach Center Hollywood FL
+Found Broward County Outreach Center Pompano Beach FL
+Found To Our House Winter Overnight Shelter VA
+Found Catholic Community Services Of Western Arizona Yuma AZ
+Found Crossroads Mission - Crossroads Recovery Center AZ
+Found Inner City Night Shelter GA
+Found Atlanta Mission - The Shepherd's Inn GA
+Found Atlanta Union Mission - Fuqua Hall GA
+Found Blair Transitional Rehabilitation Program Washington DC
+Found La Casa Transitional Rehab Program Washington DC DC
+Found Park Road Transitional House Washington DC DC
+Found YWCA Family Center OH
+Found Hope Rebirth Homeless Shelter AL
+Found Arundel House of Hope, Day Resource Center MD
+Found Arundel House of Hope, Day Resource Center MD
+Found Cecil County Domestic Violence Shelter MD
+Found Christian Shelter, Inc. MD
+Found The Salvation Army - Red Shield Lodge Emergency Shelter FL
+Found Allentown Rescue Mission Emergency Shelter and Substance Abuse Treatment PA
+Found United Communities Against Poverty Capitol Heights MD
+Found Mary And Martha House Inc Ruskin FL
+Found Families Forward Philadelphia PA
+Found Apple Tree Family Central Intake Center PA
+Found Catholic Charities Delanco Housing and Food NJ
+Found Epiphany House Womens Transitional Housing NJ
+Found PERC Shelter Union City NJ
+Found Safe House Emergency Shelter Bloomfield NJ
+Found Samaritan Inn Emergency Homeless Shelter Program NJ
+Found Strengthen Our Sisters Emergency Shelter NJ
+Found Family Promise of Greater Cleveland OH
+Found Salvation Army - Zelma George Family Shelter OH
+Found Union Station Adult Center CA
+Found St. Joseph Center Venice CA
+Found VOA El Monte Access Center CA
+Found Adams County Shelter For The Homeless KY
+Found Women's Center and Shelter of Greater Pittsburgh PA
+Found Nueva Vida Haven Emergency Shelter for Women and Children CA
+Found St. Vincet de Paul Village CA
+Found Cortez Hill Family Center CA
+Found San Diego Residential Substance Abuse Recovery CA
+Found The Center for Women and Families KY
+Found The Center for Women and Families KY
+Found Hosanna Home Lafayette AL
+Found The Salvation Army Galveston - Center of Hope TX
+Found Star Of Hope Mission - Doris and Carloss Morris Men's Development Center TX
+Found Rustic House For Men Corpus Christi TX
+Found Catholic Charities Diocese Of Metuchen - Naomi's Way (for Women And Children) NJ
+Found Strong Foundation Emergency And Transitional Housing San Antonio TX
+Found Wichita Falls Faith Mission - Beds For Those In Need TX
+Found Hiway 80 Rescue Mission Ministries Emergency Shelter TX
+Found My Brother's Keeper Waco TX
+Found Salvation Army Wichita Falls Wichita Falls, TX TX
+Found The Shade Tree - Emergency Shelter Program (for Women And Children) NV
+Found WOMEN UNIT SHELTER MA
+Found The Elizabeth Stone House Transitional Housing Jamaica Plain MA
+Found Cove House Emergency Homeless Shelter TX
+Found Beverly Warren Family Shelter VA
+Found Harbour House Family Center MA
+Found The Mission at Kern County Overnight Shelter CA
+Found House of Mercy Women's Shelter LA
+Found Shelter Network CA
+Found Salvation Army  Watsonville Emergency Shelter CA
+Found Community Resource Center MO
+Found Shelter House Transitional and Supportive Housing IA
+Found Coatesville YWCA - Gateway Shelter PA
+Found Safe Harbour Carlisle Housing Services for Homeless PA
+Found New Community Shelter - Emergency Shelter WI
+Found Hospitality House of Owatonna MN
+Found Daybreak Shelter - Daybreak Center IL
+Found REAL House Inc. Juniper House NJ
+Found The Hoboken Shelter NJ
+Found Mt. Salem Outreach Mission SC
+Found Opportunities For Otsego, Inc. Oneonta NY
+Found Idaho Falls Rescue Mission ID
+Found Quinn House GA
+Found Huma-Faith TX
+Found Turner House Living Center for Veterans MA
+Found St. Martin's House Ridgely MD
+Found Oasis Teen Shelter WA
+Found Simon House, Inc. KY
+Found Family House Transitional Program GA
+Found Recovery House For Women AZ
+Found Young Visionaries Homeless Youth Shelter CA
+Found Inner City Christian Federation MI
+Found Our Home Transitional MI
+Found Grove St. Inn - Emergency Homeless Shelter for men and women MA
+Found VOA Family Housing in Binghamton NY
+Found Teague's Home for Women NC
+Found Family Promise of Branch County IN
+Found Embry Rucker Emergency Shelter - ERCS VA
+Found Westside Men's Shelter MD
+Found Ruth Meiers New Beginnings Bismarck ND
+Found PATH Santa Barbara CA
+Found The Salvation Army Center of Hope NC
+Found First Step Back Home MO
+Found The Foundation Shelters OH
+Found Shared Blessings Homeless Shelter MO
+Found DAEOC Homeless Shelter - Delta Area Economic Opportunity Corp MO
+Found Veterans Service Centers of America VSCOA MD
+Found Janeth's Center for Women in Crisis NC
+Found Restoration Community Outreach MI
+Found C.R.O.S.S. Shelter Project TN
+Found YWCA of Greater Harrisburg - Emergency Shelter PA
+Found Sister Rose's House MA
+Found Doors of Hope Women's Shelter CA
+Found Iberia Homeless Shelter LA
+Found St. John the Evangelist Homeless Shelter WI
+Found WAIT House NY
+Found Homeless Connections WI
+Found DC General Family Shelter DC
+Found Family Shelter Columbia SC SC
+Found Precious Life Shelter CA
+Found Salvation Army Emergency Shelter - Stuart House FL
+Found Hope's Door New Beginning Center TX
+Found York Street Project NJ
+Found Christian Care Center Women's Care Center FL
+Found City Rescue Mission - Covenant House PA
+Found Reaching Out Crisis Ministries TX
+Found Wesley House Emergency Shelter NJ
+Found Family Management Center Shelter PA
+Found Room at the Inn Marquette MI
+Found The Living Room (for Women And Children) CA
+Found St. Elizabeth Shelter - Sonrisa Family Transitional Housing Program NM
+Found New Genesis CO
+Found Rescue Mission of Middle Georgia GA
+Found South Coast Gospel Mission OR
+Found The Life Center for the Homeless TX
+Found Salvation Army Family Shelter - Madison - Warming House WI
+Found Rescue Mission of Roanoke VA
+Found Eureka Rescue Mission - Homeless Guest Services CA
+Found Family Temporary Shelter Program NC
+Found Vincent Village Fort Wayne Family Transitional Housing Fort Wayne IN
+Found Outstretched Arms MI
+Found Rosalie House Emergency Shelter CA
+Found Community Homeless Solutions CA
+Found Rosalie House Emergency Shelter CA
+Found YWCA Muncie IN
+Found Meema's House, Inc. CA
+Found Women's Transitional Living Center CA
+Found Episcopal Community Services - The Next Door CA
+Found Blair County Community Action Agency Altoona PA
+Found Sergeant Eugene Ashley Center NC
+Found Volunteers ​of  America ​ (VOA) ​ Auburn Shelter CA
+Found The Lord's Place Men's Campus Boynton Beach - William H. Mann Place for Men FL
+Found CCANO Jefferson Care Center LA
+Found Community Action Of Napa Valley  Canv - South Napa Shelter CA
+Found Downtown Women's Center CA
+Found Salvation Army Knoxville Shelter TN
+Found Samaritan Place TN
+Found Homeless Shelter for Women & Mothers with Children NC
+Found Gospel Services Hope Center NC
+Found Mercy Ministries - Day Center GA
+Found Garden City Rescue Mission GA
+Found Douglas County Homeless Shelter GA
+Found SHARE House GA
+Found Alan P. Linton Emergency Shelter MD
+Found Eden I & R Inc CA
+Found South County Homeless Project CA
+Found Sunrise Village Emergency Shelter CA
+Found The Salvation Army Metro Atlanta Red Shield Service GA
+Found Santa Maria Hostel, Inc. TX
+Found Rainbow Services - Rainbow House Emergency Shelter (for Women And Children) CA
+Found Rhonda's Another Chance Louisville IN
+Found Grace Church Community Center - Samaritan House (for Women) NY
+Found Miracle Hill Rescue Mission Homeless Shelter NC
+Found Albany Emergency Shelter NY
+Found Danielle's House NY
+Found Homeless and Travelers Aid Society NY
+Found Andre House AZ
+Found Salvation Army Waco Emergency Shelter Transient Lodge TX
+Found Families Forward Philadelphia (formerly Travelers Aid Family Services of Phila) PA
+Found Relieft After Violent Encounter Greenville Transitional Housing Shelter MI
+Found Morningstar shellter for trransgenders and women MI
+Found Hope @ Miracle House CO
+Found Clermont County Homeless Shelter - James Sauls Homeless Shelter OH
+Found Honor Helping Others In Need NY
+Found Path of Life Community Emergency Shelter CA
+Found The Family Place - Family Day Center MN
+Found Simpson Housing Services Overnight Emergency Shelter MN
+Found Crossroads at Park Place TX
+Found Opportunity Place Homeless Shelter FL
+Found Brighter Tomorrows TX
+Found Coordinated Intake Cleveland OH
+Found Salvation Army Harbor Light Complex OH
+Found WAIT House NY
+Found Downtown Jimmie Hale Mission - Jessie's Place (for Women And Children) AL
+Found The Mast House Transitional Living House Scottsdale AZ
+Found Randolph County Homeless Shelter WV
+Found Housing Hope Everett WA
+Found RoofOver Transitional Shelter PA
+Found Danville Rescue Mission IL
+Found The Beacon of Hope Emergency Shelter KY
+Found McHenry County P.A.D.S.  IL
+Found Horizon House Indianapolis IN
+Found Common Ground  NY
+Found Joseph's House and Shelter NY
+Found St. Charles Lwanga Center for men NY
+Found City Rescue Mission Of Saginaw - Community Village (for Seniors Age 60+) MI
+Found East Bay Coalition For The Homeless RI
+Found Bigger Vision Community Shelter GA
+Found Beatitude House OH
+Found Shelterhouse - The Ester Marie Hatton Center for Women OH
+Found Gabriel's Horn Homeless Shelter IN
+Found ARISE Shelter Kent WA
+Found ACTS Tampa FL
+Found Francis House Center CA
+Found Springfield Victory Mission - Victory Lodge (for Men) MO
+Found Atlantic County Womens Center NJ
+Found Ozone House MI
+Found My Father's House - Servants To All PA
+Found Trinity Rescue Mission FL
+Found Trinity Rescue Mission FL
+Found Mary's Shelter PA
+Found Helping The Homeless III LLC NJ
+Found St. Luke's Guesthouse CT
+Found Bucks County Housing Group PA
+Found My Father's House CA
+Found North Central Florida Alliance For The Homeless FL
+Found New Bethlehem Day Center WA
+Found Montgomery County Coalition for the Homeless MD
+Found Montgomery County Coalition for the Homeless MD
+Found Thomas House Temporary Shelter  CA
+Found Mercy House - Guadalupe Residence CA
+Found Santa Ana Armory Cold Weather Shelter CA
+Found Isaiah House Orange County Catholic Worker CA
+Found Lydia's House OH
+Found Off The Streets - Huntington Beach CA
+Found Family Promise of Pickens County SC
+Found Mamma's Hands, House of Hope WA
+Found Christian Help Center Church Vallejo CA
+Found Salvation Army Safe Harbor Shelter IL
+Found Berkeley Food And Housing Project - Men's Overnight Shelter (for Men) CA
+Found Colette's Children's Home CA
+Found Central City Lutheran Mission CA
+Found Stewart B. McKinney Emergency Shelter CT
+Found SAFES at Fairbridge - Salvation Army Female Emergency Shelter OR
+Found Lazarus House IL
+Found Great Oaks Transitional Home LLC. MI
+Found Mountain Haven Emergency Shelter KY
+Found 5th Street Ministries Shelter and Transitional Housing NC
+Found Brian Garcia Welcome Center - Single Adult Shelter AZ
+Found Night of Peace Family Shelter, Inc. MD
+Found Grassroots Crisis Intervention - Men's And Women's Shelter MD
+Found Samaritan House - Safe Harbor Shelter CA
+Found LSS Faith Mission Client Services Center - Faith Mission OH
+Found Open Hearts Community Mission GA
+Found The Foundation FL
+Found Mason County Homeless Shelter WA
+Found Catholic Charities - Second Place Shelter NY
+Found Our House, Inc. GA
+Found Salvation Army Center For Hope Jackson MS
+Found Gulfstream Goodwill Industries West Palm Beach FL
+Found Shepherd's Godparent Home - Maternity Shelter ME
+Found Schneider House of Hope OH
+Found Greenwood Pathway House SC
+Found Sullivan County Housing Coalition NH
+Found Van Buren Shelter YMCA OH
+Found Sheltered by Jesus L/A - Men's Shelter ME
+Found Bill Mehr Drop In Center VA
+Found Higher Ground Saint Paul Shelter MN
+Found Mama T’s B & B OK
+Found Family Promise of Barry County MI
+Found ARISE Shelter Kent WA
+Found Anaheim Emergency Shelter CA
+Found Family Promise of the Midlands SC
+Found The Little Flower Maternity Home CO
+Found Grandma's House of Hope CA
+Found Destiny Village NY
+Found La Mesita Family Homeless Shelter AZ
+Found Lalitamba Saranam NY
+Found House of Charity MN
+Found Door Of Hope CA
+Found Olivieri Drop-In Center NY
+Found HOPE Services Hawaii HI
+Found The Good Seed Long Beach CA
+Found Visitation House, Inc.  MA
+Found HADIT Home for Veterans SC
+Found Path of Life Ministries Recovery Home CA
+Found Cairo Women's Shelter IL
+Found Micah house IA
+Found Salvation Army - Emergency Shelter NY
+Found Homeless Opportunity Shelter - Day Shelter Night Shelter TX
+Found Union Gospel Mission - Calvert Place For Men Shelter TX
+Found Restoration Empowerment Center TX
+Found The Lord's Place Men's Campus Boynton Beach - William H. Mann Place for Men FL
+Found Genesis Outreach IN
+Found Restoration Village Rogers AR
+Found Salvation Army Shield of Hope Shelter IL
+Found Vista Colina Emergency Family Shelter AZ
+Found Community Action Agency - Esplanade House CA
+Found Hope House  MN
+Found Residential Program Center - serving Arlington County VA
+Found Denver Rescue Mission - Lawrence Street (for Men) CO
+Found The Delores Project Shelters CO
+Found Father Woody's Haven of Hope CO
+Found Lancaster-Fairfield County Community Action (CA) Emergency Homeless Shelter OH
+Found The Lighthouse Shelter Lancaster OH
+Found St. Agnes Day Room - Day Shelter and Services PA
+Found Pathway Emergency Homeless Shelter PA
+Found McKeesport Downtown Housing PA
+Found Omni Recovery Residences  CA
+Found TEST FL
+Found The Lighthouse Biblical Recovery Center IN
+Found Friends of Falls Church Homeless Shelter VA
+Found Shelter House - Katherine K. Hanley Family Shelter VA
+Found Shelter House - Patrick Henry Family Shelter (for Large Families) VA
+Found Casa Maria CA
