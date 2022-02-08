@@ -18,11 +18,16 @@ for key, inventory in homeless_inventory.items():
 count = 0
 for shelter in shelters:
     a = shelter["address"]
+    flag = False
     for address in addresses:
         if str.lower(a) in str.lower(address) and len(a) > 0:
             count += 1
-            print("Found", a, "->", address)
+            flag = True
             break
+
+    if not flag:
+        print("Missed", a, "||", shelter["name"])
+
 print("Found", count)
 
 # shelter by state

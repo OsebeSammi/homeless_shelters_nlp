@@ -1,13 +1,17 @@
 import requests
 import json
 
-shelter_ids = range(0, 22200)
+shelter_ids = range(50000, 60000)
 shelter_data = {}
 state_data = {}
+malfunction = []
 for shelter_id in shelter_ids:
-    try:
-        data = requests.get("https://www.homelessshelterdirectory.org/get_listings_data.php?ids=" + str(shelter_id))
+    # try:
+    data = requests.get("https://www.homelessshelterdirectory.org/get_listings_data.php?ids=" + str(shelter_id))
 
+    if data.text == "":
+        malfunction.append(shelter_id)
+    else:
         if data.status_code == 200 and data.text != 'null':
             datum = data.json()[0]
             shelter_type = datum["type"]
@@ -47,9 +51,9 @@ for shelter_id in shelter_ids:
 
             state_data[state][shelter_type] += 1
 
-            print(shelter_id, datum["title"], "in ", state)
-    except Exception as error:
-        print(error)
+            print(shelter_id, datum["title"], "in ", state, datum["type"])
+        # except Exception as error:
+        #     print(error)
 
 # write to file
 with open("data_state.json", "w+") as file:
@@ -59,3 +63,6 @@ with open("data_state.json", "w+") as file:
 for shelter_type, shelters in shelter_data.items():
     with open("data_"+shelter_type+".json", "w+") as file:
         file.write(json.dumps(shelters))
+
+with open("malfunction.txt", "w+") as file:
+    file.write(str(malfunction))
