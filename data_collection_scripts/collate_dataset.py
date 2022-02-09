@@ -1,15 +1,15 @@
 import json
 
-with open("data/clean/shelters_by_address.json", "r") as file:
+with open("../data/clean/shelters_by_address.json", "r") as file:
     shelters_1 = json.loads(file.read())
 
-with open("data/clean/shelters_2_by_address.json", "r") as file:
+with open("../data/clean/shelters_2_by_address.json", "r") as file:
     shelters_2 = json.loads(file.read())
 
-with open("data/clean/shelters_inventory_by_address.json", "r") as file:
+with open("../data/clean/shelters_inventory_by_address.json", "r") as file:
     inventory = json.loads(file.read())
 
-with open("data/clean/hp_by_address.json", "r") as file:
+with open("../data/clean/hp_by_address.json", "r") as file:
     h_programs = json.loads(file.read())
 
 final_dataset = {}
@@ -45,7 +45,7 @@ for shelter_key, shelter in shelters_2.items():
             counter += 1
 
 print("Verified", counter)
-with open("data/dataset.json", "w") as file:
+with open("../data/dataset.json", "w") as file:
     file.write(json.dumps(final_dataset))
 
 # housing programs

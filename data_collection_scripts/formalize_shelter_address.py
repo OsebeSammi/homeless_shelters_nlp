@@ -12,7 +12,7 @@ def formalize_address(address, city):
     return address["description"]
 
 
-with open("data/clean/housing_programs.json", "r") as file:
+with open("../data/clean/housing_programs.json", "r") as file:
     shelters = json.loads(file.read())
 
 count = 0
@@ -40,6 +40,6 @@ for shelter in shelters:
         except Exception as e:
             print("Missed ", address, city)
 
-with open("data/clean/hp_by_address.json", "w") as file:
+with open("../data/clean/hp_by_address.json", "w") as file:
     file.write(json.dumps(shelters_by_address))
 

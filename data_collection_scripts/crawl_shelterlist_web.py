@@ -120,5 +120,5 @@ for zip_code in zip_codes:
     except Exception as error:
         print(error)
 
-with open("data/raw/shelterlist.json", "w") as file:
+with open("../data/raw/shelterlist.json", "w") as file:
     file.write(json.dumps(shelters))

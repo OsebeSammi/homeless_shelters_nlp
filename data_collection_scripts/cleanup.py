@@ -2,21 +2,21 @@ import json
 import re
 
 # state names
-with open("data/clean/state_names.json", "r") as file:
+with open("../data/clean/state_names.json", "r") as file:
     state_names = json.loads(file.read())
 state_short = {}
 for key, val in state_names.items():
     state_short[str.lower(val)] = key
 
 # load data crawled from https://www.homelessshelterdirectory.org/
-with open("data/raw/data_shelter.json", "r") as file:
+with open("../data/raw/data_shelter.json", "r") as file:
     homeless_shelter_directory_data = json.loads(file.read())
 
 # load data crawled from https://www.shelterlistings.org/
-with open("data/raw/data_shelter_3.json", "r") as file:
+with open("../data/raw/data_shelter_3.json", "r") as file:
     shelter_listings_1 = json.loads(file.read())
 
-with open("data/raw/data_shelter_2.json", "r") as file:
+with open("../data/raw/data_shelter_2.json", "r") as file:
     shelter_listings_2 = json.loads(file.read())
 
 # join shelter listing data
@@ -93,8 +93,8 @@ for i in range(len(homeless_shelter_directory_data)):
     if not flag:
         shelter_listings.append(a)
 
-with open("data/clean/shelters.json", "w") as file:
+with open("../data/clean/shelters.json", "w") as file:
     file.write(json.dumps(shelter_listings))
 
-with open("data/clean/housing_programs.json", "w") as file:
+with open("../data/clean/housing_programs.json", "w") as file:
     file.write(json.dumps(housing_authorities))
