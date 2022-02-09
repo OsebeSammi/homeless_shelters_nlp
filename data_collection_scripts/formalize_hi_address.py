@@ -52,5 +52,5 @@ for i in range(len(housing_inventory)):
         except Exception as error:
             print("Missed B", address, city)
 
-with open("../data/clean/shelters_inventory_by_address.json", "w") as file:
+with open("../data/hud_inventory.json", "w") as file:
     file.write(json.dumps(housing_inventory_json))

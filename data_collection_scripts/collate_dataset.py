@@ -6,7 +6,7 @@ with open("../data/clean/shelters_by_address.json", "r") as file:
 with open("../data/clean/shelters_2_by_address.json", "r") as file:
     shelters_2 = json.loads(file.read())
 
-with open("../data/clean/shelters_inventory_by_address.json", "r") as file:
+with open("../data/hud_inventory.json", "r") as file:
     inventory = json.loads(file.read())
 
 with open("../data/clean/hp_by_address.json", "r") as file:

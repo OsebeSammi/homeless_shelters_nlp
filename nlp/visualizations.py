@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 
 
 # load shelter data
-with open("data/clean/shelters.json", "r") as file:
+with open("../data/clean/shelters.json", "r") as file:
     data = file.read()
     shelter_data = json.loads(data)
 
@@ -113,10 +113,10 @@ plt.close()
 
 sns.set(rc={'figure.figsize': (20, 9)})
 # bar graph states
-with open("data/clean/state_shelters.json", "r") as file:
+with open("../data/clean/state_shelters.json", "r") as file:
     states = json.loads(file.read())
 
-with open("data/clean/state_hic.json", "r") as file:
+with open("../data/clean/state_hic.json", "r") as file:
     states_hic = json.loads(file.read())
 
 x = []
