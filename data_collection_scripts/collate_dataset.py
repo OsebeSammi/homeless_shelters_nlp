@@ -26,6 +26,13 @@ for shelter_key, shelter in shelters_1.items():
     else:
         shelter["beds"] = ""
         shelter["verified"] = False
+
+    # clean address formalization bug
+    if len(shelter["description"]) > 1:
+        for desc in shelter["description"]:
+            if isinstance(desc["description"], list):
+                desc["description"] = desc["description"][0]["description"]
+
     final_dataset[shelter_key] = shelter
 
 print("Verified", counter)
