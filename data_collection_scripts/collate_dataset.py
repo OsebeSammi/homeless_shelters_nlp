@@ -29,9 +29,9 @@ for shelter_key, shelter in shelters_1.items():
 
     # clean address formalization bug
     if len(shelter["description"]) > 1:
-        for desc in shelter["description"]:
-            if isinstance(desc["description"], list):
-                desc["description"] = desc["description"][0]["description"]
+        for i in range(len(shelter["description"])):
+            if isinstance(shelter["description"][i]["description"], list):
+                shelter["description"][i]["description"] = shelter["description"][i]["description"][0]["description"]
 
     final_dataset[shelter_key] = shelter
 
@@ -45,6 +45,13 @@ for shelter_key, shelter in shelters_2.items():
     else:
         shelter["beds"] = ""
         shelter["verified"] = False
+
+    # clean address formalization bug
+    if len(shelter["description"]) > 1:
+        for i in range(len(shelter["description"])):
+            if isinstance(shelter["description"][i]["description"], list):
+                shelter["description"][i]["description"] = shelter["description"][i]["description"][0][
+                    "description"]
 
     if shelter_key not in final_dataset:
         final_dataset[shelter_key] = shelter

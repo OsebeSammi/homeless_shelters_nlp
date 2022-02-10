@@ -20,6 +20,7 @@ shelters_by_address = {}
 for shelter in shelters:
     address = shelter["address"]
     city = shelter["city"]
+    description_temp = shelter["description"]
     shelter["description"] = [{
         "title": shelter["name"],
         "description": shelter["description"]
@@ -30,10 +31,11 @@ for shelter in shelters:
             formalized_address = formalize_address(address, city)
             count += 1
             print("API REQ", count)
+
             if formalized_address in shelters_by_address:
                 shelters_by_address[formalized_address]["description"].append({
                     "title": shelter["name"],
-                    "description": shelter["description"]
+                    "description": description_temp
                 })
             else:
                 shelters_by_address[formalized_address] = shelter
