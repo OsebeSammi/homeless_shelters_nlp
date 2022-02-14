@@ -42,7 +42,7 @@ pic = np.array(Image.open(requests.get(
 # with collocations
 wordcloud = WordCloud(width=1000, height=1000, background_color='white', mask=pic,
                       min_font_size=10, collocations=True).generate(clean)
-plt.figure(figsize=(10, 10), facecolor='white', edgecolor='blue')
+plt.figure(figsize=(15, 15), facecolor='white', edgecolor='blue')
 plt.imshow(wordcloud)
 plt.axis("off")
 plt.tight_layout(pad=0)
