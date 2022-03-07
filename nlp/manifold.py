@@ -1,8 +1,9 @@
 import numpy as np
-from sklearn.manifold import SpectralEmbedding, TSNE
+from sklearn.manifold import TSNE
 from sentence_transformers import SentenceTransformer
 import matplotlib.pyplot as plt
 import os
+import pickle
 
 model = SentenceTransformer("sentence-transformers/paraphrase-mpnet-base-v2")
 
@@ -40,6 +41,9 @@ plt.close()
 # save reduced dimension
 np.save("reduced_dime.npy", dimension_reduced)
 
+# save model
+with open("manifold.pkl", "wb") as file:
+    pickle.dump(manifold, file)
 
 
 
