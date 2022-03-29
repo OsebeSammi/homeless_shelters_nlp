@@ -80,7 +80,9 @@ for data in QA:
         "text": [data["answers"]]
     })
 
-df = pd.read_excel("../data/annotation_200.xlsx", keep_default_na=False)
+df_1 = pd.read_excel("../annotated/annotator_1.xlsx", keep_default_na=False)
+df_2 = pd.read_excel("../annotated/annotator_2.xlsx", keep_default_na=False)
+df_3 = pd.read_excel("../annotated/annotator_3.xlsx", keep_default_na=False)
 a, q, c = get_annotated_data(df[100:])
 questions = np.concatenate((questions, q))
 contexts = np.concatenate((contexts, c))
