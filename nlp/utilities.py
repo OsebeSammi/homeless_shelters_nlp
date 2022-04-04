@@ -13,7 +13,7 @@ def get_annotated_data(dfs):
                     "answer_start": [index],
                     "text": [ans]
                 })
-                contexts.append(df.iloc[i]["Text"])
+                contexts.append(mask(df.iloc[i]["Text"]))
 
             if len(df.iloc[i]["Documents"]) > 0:
                 question = "What are the required documents?"
@@ -24,7 +24,7 @@ def get_annotated_data(dfs):
                     "answer_start": [index],
                     "text": [ans]
                 })
-                contexts.append(df.iloc[i]["Text"])
+                contexts.append(mask(df.iloc[i]["Text"]))
 
             if len(df.iloc[i]["Services"]) > 0:
                 question = "What are the provided services?"
@@ -35,7 +35,7 @@ def get_annotated_data(dfs):
                     "answer_start": [index],
                     "text": [ans]
                 })
-                contexts.append(df.iloc[i]["Text"])
+                contexts.append(mask(df.iloc[i]["Text"]))
 
             if len(df.iloc[i]["Admission Process"]) > 0:
                 question = "What is the admission process?"
@@ -46,7 +46,7 @@ def get_annotated_data(dfs):
                     "answer_start": [index],
                     "text": [ans]
                 })
-                contexts.append(df.iloc[i]["Text"])
+                contexts.append(mask(df.iloc[i]["Text"]))
 
             if len(df.iloc[i]["Duration of Stay"]) > 0:
                 question = "How long can one stay?"
@@ -57,6 +57,20 @@ def get_annotated_data(dfs):
                     "answer_start": [index],
                     "text": [ans]
                 })
-                contexts.append(df.iloc[i]["Text"])
+                contexts.append(mask(df.iloc[i]["Text"]))
 
     return answers, questions, contexts
+
+
+def mask(text):
+    MASK = [
+        "Eligibility", "Requirements", "Documents", "Services", "Admission", "Duration",
+        "eligibility", "requirements", "documents", "services", "admission", "duration",
+        "Eligible", "Requirement", "Document", "Service", "Required",
+        "eligible", "requirement", "document", "service", "required",
+    ]
+
+    for m in MASK:
+        text = text.replace(m, "[MASK]")
+
+    return text
