@@ -5,7 +5,7 @@ def get_annotated_data(dfs):
     for df in dfs:
         for i in range(len(df)-1):
             if len(df.iloc[i]["Eligibility & Requirements"]) > 0:
-                question = "What are the Eligibility & Requirement criteria and requirements?"
+                question = "What are the Eligibility & Requirement criteria?"
                 questions.append(question)
                 ans = df.iloc[i]["Eligibility & Requirements"]
                 index = df.iloc[i]["Text"].find(ans)

@@ -4,7 +4,7 @@ import pandas as pd
 import pickle
 
 
-with open("fine_roberta_2e-5.pkl", "rb") as file:
+with open("2e-5_fine_roberta.pkl", "rb") as file:
     model = pickle.load(file)
 nlp = pipeline('question-answering', model=model, tokenizer="deepset/roberta-base-squad2")
 
@@ -13,7 +13,7 @@ nlp = pipeline('question-answering', model=model, tokenizer="deepset/roberta-bas
 
 
 questions = [
-    "What are the Eligibility & Requirement criteria and requirements?",
+    "What are the Eligibility & Requirement criteria?",
     "What are the required documents?",
     "What are the provided services?",
     "What is the admission process?",
@@ -25,8 +25,8 @@ columns = ["Eligibility & Requirements", "Documents", "Services", "Admission Pro
 # load dataset
 # with open("../data/dataset.json", "r") as file:
 #     dataset = json.loads(file.read())
-df = pd.read_excel("../data/annotation_200.xlsx", keep_default_na=False)
-validate_set = df[:40]
+df = pd.read_excel("../data/annotated/gold.xlsx", keep_default_na=False)
+validate_set = df[:50]
 
 # csv
 gold = []
