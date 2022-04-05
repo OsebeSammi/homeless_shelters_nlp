@@ -60,13 +60,24 @@ for i in range(len(validate_set)):
                 "is_impossible": True
             })
         else:
+            if "###" in validate_set.iloc[i][columns[j]]:
+                multi_answers = validate_set.iloc[i][columns[j]].split("###")
+                answers = []
+                for ans in multi_answers:
+                    answers.append({
+                            "text": ans,
+                            "answer_start": context.find(ans)
+                        })
+            else:
+                answers = [{
+                    "text": validate_set.iloc[i][columns[j]],
+                    "answer_start": context.find(validate_set.iloc[i][columns[j]])
+                }]
+
             paragraph["qas"].append({
                 "question": questions[j],
                 "id": index + "_" + str(j),
-                "answers": [{
-                    "text": validate_set.iloc[i][columns[j]],
-                    "answer_start": context.find(validate_set.iloc[i][columns[j]])
-                }],
+                "answers": answers,
                 "is_impossible": False
             })
 
