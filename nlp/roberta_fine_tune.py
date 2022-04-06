@@ -1,11 +1,12 @@
 import pickle
 from datasets import Dataset
-from utilities import get_annotated_data
+from utilities import get_annotated_data, get_annotated_empty
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline, Trainer, TrainingArguments
 from transformers import DefaultDataCollator
 import json
 import pandas as pd
 import sys
+import numpy as np
 
 # model_name = "deepset/roberta-base-squad2"
 model_name = "deepset/roberta-base-squad2"
@@ -88,10 +89,14 @@ a, q, c = get_annotated_data([df_1[100:], df_2[200:], df_3[200:]])
 # questions = np.concatenate((questions, q))
 # contexts = np.concatenate((contexts, c))
 # answers = np.concatenate((answers, a))
+a_null, q_null, c_null = get_annotated_empty([df_1[100:]])
+questions = np.concatenate((q_null, q))
+contexts = np.concatenate((c_null, c))
+answers = np.concatenate((a_null, a))
 data = {
-    "answers": a,
-    "questions": q,
-    "contexts": c
+    "answers": answers,
+    "questions": questions,
+    "contexts": contexts
 }
 
 my_squad = Dataset.from_dict(data)
@@ -122,7 +127,7 @@ training_args = TrainingArguments(
     learning_rate=lr,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=8,
-    num_train_epochs=4,
+    num_train_epochs=6,
     weight_decay=0.01,
 )
 
@@ -136,5 +141,5 @@ trainer = Trainer(
 )
 
 trainer.train()
-with open(str(lr)+"_fine_roberta.pkl", "wb") as file:
+with open(str(lr)+"_fine_roberta_6_epoch.pkl", "wb") as file:
     pickle.dump(model, file)

@@ -39,7 +39,7 @@ for i in range(len(validate_set)):
         "qas": []
     }
 
-    for j in range(5):
+    for j in range(len(questions)):
         # model query
         qa = {
             "question": questions[j],

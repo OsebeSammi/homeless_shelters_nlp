@@ -13,6 +13,7 @@ import os
 import re
 import string
 import sys
+from rouge_score import rouge_scorer
 
 OPTS = None
 
@@ -78,9 +79,20 @@ def compute_f1(a_gold, a_pred):
   f1 = (2 * precision * recall) / (precision + recall)
   return f1
 
+def compute_rogue(a_gold, a_pred):
+  gold_toks = get_tokens(a_gold)
+  pred_toks = get_tokens(a_pred)
+  if len(gold_toks) == 0 or len(pred_toks) == 0:
+    # If either is no-answer, then F1 is 1 if they agree, 0 otherwise
+    return int(gold_toks == pred_toks)
+  scorer = rouge_scorer.RougeScorer(['rouge1'], use_stemmer=True)
+  score = scorer.score(a_gold, a_pred)
+  return score["rouge1"][2]
+
 def get_raw_scores(dataset, preds):
   exact_scores = {}
   f1_scores = {}
+  rogue_scores = {}
   for article in dataset:
     for p in article['paragraphs']:
       for qa in p['qas']:
@@ -97,6 +109,7 @@ def get_raw_scores(dataset, preds):
         # Take max over all gold answers
         exact_scores[qid] = max(compute_exact(a, a_pred) for a in gold_answers)
         f1_scores[qid] = max(compute_f1(a, a_pred) for a in gold_answers)
+        rogue_scores[qid] = max(compute_rogue(a, a_pred) for a in gold_answers)
   return exact_scores, f1_scores
 
 def apply_no_ans_threshold(scores, na_probs, qid_to_has_ans, na_prob_thresh):
