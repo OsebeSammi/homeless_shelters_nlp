@@ -4,7 +4,7 @@ import pandas as pd
 import pickle
 
 
-with open("2e-5_fine_roberta.pkl", "rb") as file:
+with open("2e-7_fine_roberta.pkl", "rb") as file:
     model = pickle.load(file)
 nlp = pipeline('question-answering', model=model, tokenizer="deepset/roberta-base-squad2")
 
@@ -40,46 +40,48 @@ for i in range(len(validate_set)):
     }
 
     for j in range(len(questions)):
-        # model query
-        qa = {
-            "question": questions[j],
-            "context": context
-        }
-        answer = nlp(qa)
-        pred[index+"_"+str(j)] = answer["answer"]
-
-        print(index+"_"+str(j), answer["answer"])
-        print(validate_set.iloc[i][columns[j]], "\n")
-
-        # gold
-        if len(validate_set.iloc[i]["Eligibility & Requirements"]) == 0:
-            paragraph["qas"].append({
+        if j == j:
+            # model query
+            qa = {
                 "question": questions[j],
-                "id": index+"_"+str(j),
-                "answers": [],
-                "is_impossible": True
-            })
-        else:
-            if "###" in validate_set.iloc[i][columns[j]]:
-                multi_answers = validate_set.iloc[i][columns[j]].split("###")
-                answers = []
-                for ans in multi_answers:
-                    answers.append({
-                            "text": ans,
-                            "answer_start": context.find(ans)
-                        })
+                "context": context
+            }
+            answer = nlp(qa)
+            pred[index+"_"+str(j)] = answer["answer"]
+
+            print(index+"_"+str(j), answer["answer"])
+            print(validate_set.iloc[i][columns[j]], "\n")
+
+            # gold
+            if len(validate_set.iloc[i][columns[j]].strip()) == 0:
+                paragraph["qas"].append({
+                    "question": questions[j],
+                    "id": index+"_"+str(j),
+                    "answers": [],
+                    "is_impossible": True
+                })
+
             else:
-                answers = [{
-                    "text": validate_set.iloc[i][columns[j]],
-                    "answer_start": context.find(validate_set.iloc[i][columns[j]])
-                }]
+                if "###" in validate_set.iloc[i][columns[j]]:
+                    multi_answers = validate_set.iloc[i][columns[j]].split("###")
+                    answers = []
+                    for ans in multi_answers:
+                        answers.append({
+                                "text": ans,
+                                "answer_start": context.find(ans)
+                            })
+                else:
+                    answers = [{
+                        "text": validate_set.iloc[i][columns[j]],
+                        "answer_start": context.find(validate_set.iloc[i][columns[j]])
+                    }]
 
-            paragraph["qas"].append({
-                "question": questions[j],
-                "id": index + "_" + str(j),
-                "answers": answers,
-                "is_impossible": False
-            })
+                paragraph["qas"].append({
+                    "question": questions[j],
+                    "id": index + "_" + str(j),
+                    "answers": answers,
+                    "is_impossible": False
+                })
 
     gold.append(paragraph)
 

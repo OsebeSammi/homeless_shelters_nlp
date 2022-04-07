@@ -4,59 +4,59 @@ import json
 models = ["2e-3", "2e-4", "2e-5", "2e-6", "2e-7"]
 results = [
   {
-  "exact": 12.0,
-  "f1": 12.616333103289627,
-  "total": 250,
-  "HasAns_exact": 10.666666666666666,
-  "HasAns_f1": 11.351481225877363,
-  "HasAns_total": 225,
-  "NoAns_exact": 24.0,
-  "NoAns_f1": 24.0,
-  "NoAns_total": 25
-},
-{
-  "exact": 31.2,
-  "f1": 41.220155773884514,
-  "total": 250,
-  "HasAns_exact": 34.22222222222222,
-  "HasAns_f1": 45.35572863764947,
-  "HasAns_total": 225,
-  "NoAns_exact": 4.0,
-  "NoAns_f1": 4.0,
-  "NoAns_total": 25
-},
-{
-  "exact": 40.4,
-  "f1": 49.32022992446885,
-  "total": 250,
-  "HasAns_exact": 44.0,
-  "HasAns_f1": 53.91136658274316,
-  "HasAns_total": 225,
-  "NoAns_exact": 8.0,
-  "NoAns_f1": 8.0,
-  "NoAns_total": 25
-},
+    "exact": 11.2,
+    "f1": 11.828833103289625,
+    "total": 250,
+    "HasAns_exact": 0.6993006993006993,
+    "HasAns_f1": 1.798659271485359,
+    "HasAns_total": 143,
+    "NoAns_exact": 25.233644859813083,
+    "NoAns_f1": 25.233644859813083,
+    "NoAns_total": 107
+  },
 {
   "exact": 32.4,
-  "f1": 42.475556237252746,
+  "f1": 43.00991797515356,
   "total": 250,
-  "HasAns_exact": 35.55555555555556,
-  "HasAns_f1": 46.750618041391945,
-  "HasAns_total": 225,
-  "NoAns_exact": 4.0,
-  "NoAns_f1": 4.0,
-  "NoAns_total": 25
+  "HasAns_exact": 47.55244755244755,
+  "HasAns_f1": 66.1012552013174,
+  "HasAns_total": 143,
+  "NoAns_exact": 12.149532710280374,
+  "NoAns_f1": 12.149532710280374,
+  "NoAns_total": 107
 },
 {
-  "exact": 17.6,
-  "f1": 28.466820918547,
+  "exact": 42.0,
+  "f1": 51.44332545907123,
   "total": 250,
-  "HasAns_exact": 19.555555555555557,
-  "HasAns_f1": 31.62980102060778,
-  "HasAns_total": 225,
-  "NoAns_exact": 0.0,
-  "NoAns_f1": 0.0,
-  "NoAns_total": 25
+  "HasAns_exact": 62.93706293706294,
+  "HasAns_f1": 79.44637318019447,
+  "HasAns_total": 143,
+  "NoAns_exact": 14.018691588785046,
+  "NoAns_f1": 14.018691588785046,
+  "NoAns_total": 107
+},
+{
+  "exact": 34.0,
+  "f1": 44.962923056126414,
+  "total": 250,
+  "HasAns_exact": 50.34965034965035,
+  "HasAns_f1": 69.51559974847275,
+  "HasAns_total": 143,
+  "NoAns_exact": 12.149532710280374,
+  "NoAns_f1": 12.149532710280374,
+  "NoAns_total": 107
+},
+{
+  "exact": 18.4,
+  "f1": 30.552259151811327,
+  "total": 250,
+  "HasAns_exact": 31.46853146853147,
+  "HasAns_f1": 52.71373977589391,
+  "HasAns_total": 143,
+  "NoAns_exact": 0.9345794392523364,
+  "NoAns_f1": 0.9345794392523364,
+  "NoAns_total": 107
 }
 ]
 
