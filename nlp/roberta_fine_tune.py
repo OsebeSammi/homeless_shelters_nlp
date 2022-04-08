@@ -85,14 +85,7 @@ def preprocess_function(data):
 df_1 = pd.read_excel("../data/annotated/annotator_1.xlsx", keep_default_na=False)
 df_2 = pd.read_excel("../data/annotated/annotator_2.xlsx", keep_default_na=False)
 df_3 = pd.read_excel("../data/annotated/annotator_3.xlsx", keep_default_na=False)
-a, q, c = get_annotated_data([df_1[100:], df_2[200:], df_3[200:]])
-# questions = np.concatenate((questions, q))
-# contexts = np.concatenate((contexts, c))
-# answers = np.concatenate((answers, a))
-a_null, q_null, c_null = get_annotated_empty([df_1[100:]])
-questions = np.concatenate((q_null, q))
-contexts = np.concatenate((c_null, c))
-answers = np.concatenate((a_null, a))
+answers, questions, contexts = get_annotated_data([df_1[100:], df_2[200:], df_3[200:]], False)
 data = {
     "answers": answers,
     "questions": questions,
@@ -101,13 +94,11 @@ data = {
 
 my_squad = Dataset.from_dict(data)
 tokenized_training = my_squad.map(preprocess_function, batched=True)
-# tokenized_training = preprocess_function(questions, contexts, answers)
 
 # validation
 df_gold = pd.read_excel("../data/annotated/gold.xlsx", keep_default_na=False)
-answers, questions, contexts = get_annotated_data([df_gold])
+answers, questions, contexts = get_annotated_data([df_gold[50:]], False)
 
-# tokenized_eval = preprocess_function(questions, contexts, answers)
 data = {
     "answers": answers,
     "questions": questions,
@@ -127,7 +118,7 @@ training_args = TrainingArguments(
     learning_rate=lr,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=8,
-    num_train_epochs=6,
+    num_train_epochs=3,
     weight_decay=0.01,
 )
 
@@ -141,5 +132,5 @@ trainer = Trainer(
 )
 
 trainer.train()
-with open(str(lr)+"_fine_roberta_6_epoch.pkl", "wb") as file:
+with open(str(lr)+"_fine_roberta_3_epoch", "wb") as file:
     pickle.dump(model, file)

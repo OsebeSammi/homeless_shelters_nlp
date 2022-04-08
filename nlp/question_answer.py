@@ -4,7 +4,7 @@ import pandas as pd
 import pickle
 
 
-with open("2e-7_fine_roberta.pkl", "rb") as file:
+with open("2e-05_fine_roberta_3_epoch.pkl", "rb") as file:
     model = pickle.load(file)
 nlp = pipeline('question-answering', model=model, tokenizer="deepset/roberta-base-squad2")
 
