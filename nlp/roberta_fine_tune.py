@@ -1,6 +1,6 @@
 import pickle
 from datasets import Dataset
-from utilities import get_annotated_data, get_annotated_empty
+from utilities import get_annotated_data, get_annotated_empty, oversample_annotated_data
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline, Trainer, TrainingArguments
 from transformers import DefaultDataCollator
 import json
@@ -85,7 +85,11 @@ def preprocess_function(data):
 df_1 = pd.read_excel("../data/annotated/annotator_1.xlsx", keep_default_na=False)
 df_2 = pd.read_excel("../data/annotated/annotator_2.xlsx", keep_default_na=False)
 df_3 = pd.read_excel("../data/annotated/annotator_3.xlsx", keep_default_na=False)
-answers, questions, contexts = get_annotated_data([df_1[100:], df_2[200:], df_3[200:]], False)
+answers, questions, contexts = oversample_annotated_data([df_1[100:], df_2[200:], df_3[200:]], False)
+# a_none, q_none, c_none = get_annotated_empty([df_1[100:200], df_2[100:200], df_3[100:200]])
+# answers = np.concatenate((answers, a_none))
+# questions = np.concatenate((questions, q_none))
+# contexts = np.concatenate((contexts, c_none))
 data = {
     "answers": answers,
     "questions": questions,
@@ -118,7 +122,7 @@ training_args = TrainingArguments(
     learning_rate=lr,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=8,
-    num_train_epochs=3,
+    num_train_epochs=5,
     weight_decay=0.01,
 )
 
@@ -132,5 +136,5 @@ trainer = Trainer(
 )
 
 trainer.train()
-with open(str(lr)+"_fine_roberta_3_epoch", "wb") as file:
+with open("fine_roberta_5_oversample_epoch", "wb") as file:
     pickle.dump(model, file)

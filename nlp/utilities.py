@@ -159,3 +159,98 @@ def get_annotated_empty(dfs):
             contexts.append(dfs[0].iloc[i]["Text"])
 
     return answers, questions, contexts
+
+
+def oversample_annotated_data(dfs, mask_key_words=False):
+    answers = []
+    questions = []
+    contexts = []
+    for df in dfs:
+        for i in range(len(df) - 1):
+            if len(df.iloc[i]["Eligibility & Requirements"].strip()) > 0:
+                question = "What are the Eligibility & Requirement criteria?"
+                questions.append(question)
+                ans = df.iloc[i]["Eligibility & Requirements"]
+                index = df.iloc[i]["Text"].find(ans)
+                answers.append({
+                    "answer_start": [index],
+                    "text": [ans]
+                })
+                if mask_key_words:
+                    contexts.append(mask(df.iloc[i]["Text"]))
+                else:
+                    contexts.append(df.iloc[i]["Text"])
+
+            if len(df.iloc[i]["Documents"].strip()) > 0:
+                # oversample thrice
+                for i in range(4):
+                    question = "What are the required documents?"
+                    questions.append(question)
+                    ans = df.iloc[i]["Documents"]
+                    index = df.iloc[i]["Text"].find(ans)
+                    answers.append({
+                        "answer_start": [index],
+                        "text": [ans]
+                    })
+
+                    if mask_key_words:
+                        contexts.append(mask(df.iloc[i]["Text"]))
+                    else:
+                        contexts.append(df.iloc[i]["Text"])
+
+            if len(df.iloc[i]["Services"].strip()) > 0:
+                question = "What are the provided services?"
+                questions.append(question)
+                ans = df.iloc[i]["Services"]
+                index = df.iloc[i]["Text"].find(ans)
+                answers.append({
+                    "answer_start": [index],
+                    "text": [ans]
+                })
+                if mask_key_words:
+                    contexts.append(mask(df.iloc[i]["Text"]))
+                else:
+                    contexts.append(df.iloc[i]["Text"])
+
+            if len(df.iloc[i]["Admission Process"].strip()) > 0:
+                # oversample twice
+                # for i in range(2):
+                question = "What is the admission process?"
+                questions.append(question)
+                ans = df.iloc[i]["Admission Process"]
+                index = df.iloc[i]["Text"].find(ans)
+                answers.append({
+                    "answer_start": [index],
+                    "text": [ans]
+                })
+                if mask_key_words:
+                    contexts.append(mask(df.iloc[i]["Text"]))
+                else:
+                    contexts.append(df.iloc[i]["Text"])
+
+            if len(df.iloc[i]["Duration of Stay"].strip()) > 0:
+                question = "How long can one stay?"
+                questions.append(question)
+                ans = df.iloc[i]["Duration of Stay"]
+                index = df.iloc[i]["Text"].find(ans)
+                answers.append({
+                    "answer_start": [index],
+                    "text": [ans]
+                })
+                if mask_key_words:
+                    contexts.append(mask(df.iloc[i]["Text"]))
+                else:
+                    contexts.append(df.iloc[i]["Text"])
+
+    return answers, questions, contexts
+
+
+def overlap(arr1, arr2):
+    overlap = 0
+    for token1 in arr1:
+        for token2 in arr2:
+            if token1.strip() == token2.strip():
+                overlap += 1
+                break
+
+    return overlap / (len(arr1) + len(arr2))/2

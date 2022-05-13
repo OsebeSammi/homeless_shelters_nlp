@@ -77,40 +77,62 @@ plt.legend()
 plt.savefig("roberta_lr")
 plt.close()
 
-model_mask = {
-  "exact": 24.0,
-  "f1": 42.696728420820136,
+no_ans = {
+  "exact": 39.6,
+  "f1": 48.54925934966657,
   "total": 250,
-  "HasAns_exact": 41.95804195804196,
-  "HasAns_f1": 74.64463010632892,
+  "HasAns_exact": 58.04195804195804,
+  "HasAns_f1": 73.68751634557094,
   "HasAns_total": 143,
-  "NoAns_exact": 0.0,
-  "NoAns_f1": 0.0,
+  "NoAns_exact": 14.953271028037383,
+  "NoAns_f1": 14.953271028037383,
   "NoAns_total": 107
 }
 
-model_no_ans = {
-  "exact": 36.8,
-  "f1": 45.66589539512453,
-  "total": 250,
-  "HasAns_exact": 54.54545454545455,
-  "HasAns_f1": 70.04527166979815,
-  "HasAns_total": 143,
-  "NoAns_exact": 13.08411214953271,
-  "NoAns_f1": 13.08411214953271,
-  "NoAns_total": 107
-}
+over_s_2 = [
+  1.643765,
+  1.592917,
+  1.619818,
+  1.618348,
+  1.629513,
+  1.614921,
+]
 
-vanilla_epoch_3 = {
-  "exact": 33.2,
-  "f1": 42.061092108616286,
-  "total": 250,
-  "HasAns_exact": 57.34265734265734,
-  "HasAns_f1": 72.83407711296553,
-  "HasAns_total": 143,
-  "NoAns_exact": 0.9345794392523364,
-  "NoAns_f1": 0.9345794392523364,
-  "NoAns_total": 107
-}
+over_s_3 = [
+  1.588016,
+  1.571915,
+  1.53689,
+  1.63393,
+  1.646557,
+  1.632715
+]
 
+over_s_4 = [
+  1.640043,
+  1.531051,
+  1.515908,
+  1.515673,
+  1.504848,
+  1.552825
+]
+
+over_s_5 = [
+  1.638036,
+  1.56335,
+  1.520628,
+  1.555116,
+  1.582966,
+  1.59075
+]
+
+plt.plot(epochs, over_s_2, label="twice", color="r")
+plt.plot(epochs, over_s_3, label="thrice")
+plt.plot(epochs, over_s_4, label="four times", color="g")
+plt.plot(epochs, over_s_5, label="five times", color="y")
+plt.title("Oversampling Class Documents")
+plt.xlabel("epochs")
+plt.ylabel("validation loss")
+plt.legend()
+plt.savefig("roberta_oversample")
+plt.close()
 
