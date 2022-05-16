@@ -136,5 +136,5 @@ trainer = Trainer(
 )
 
 trainer.train()
-with open("fine_roberta_5_oversample_epoch", "wb") as file:
+with open("models/fine_roberta_5_oversample_epoch", "wb") as file:
     pickle.dump(model, file)

@@ -17,7 +17,7 @@ word_totals = []
 words_array = []
 words_100 = []
 for key, shelter in shelter_data.items():
-    words = utilities.get_words(shelter["description"])
+    words = utilities.get_words(shelter["description"][0]["description"])
     words_array.append(words)
     word_totals.append(len(words))
 
@@ -49,6 +49,7 @@ for thisfrac, thispatch in zip(fracs, patches):
 print("Max", np.max(word_totals))
 print("Min", np.min(word_totals))
 print("AVG", np.mean(word_totals))
+print("STD", np.std(word_totals))
 plt.xlabel("Number of Words in Details Section")
 plt.ylabel("Density")
 plt.title("Histogram of Word Counts")
