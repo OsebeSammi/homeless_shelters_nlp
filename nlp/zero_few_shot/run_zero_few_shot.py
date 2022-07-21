@@ -17,6 +17,7 @@ print("MODEL", model_name)
 lr = 3e-5
 weight_decay = 0.01
 epochs = 3
+max_length = 512
 
 
 def preprocess_function(data):
@@ -24,9 +25,7 @@ def preprocess_function(data):
     inputs = tokenizer(
         data["questions"],
         data["contexts"],
-        # max_length=384,
-        # max_length=4096,
-        max_length=512,
+        max_length=max_length,
         truncation="only_second",
         return_offsets_mapping=True,
         padding="max_length",
@@ -92,7 +91,7 @@ df_3 = pd.read_excel("../../data/annotated/annotator_3.xlsx", keep_default_na=Fa
 eligibility, documents, services, admission, duration = get_annotated_data([df_1[100:], df_2[200:], df_3[200:]])
 
 # few shot
-counts = np.arange(0, 110, 10)
+counts = np.arange(60, 110, 10)
 for i in counts:
     # load afresh
     model = AutoModelForQuestionAnswering.from_pretrained(model_name)

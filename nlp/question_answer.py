@@ -4,7 +4,7 @@ import pandas as pd
 import pickle
 
 
-with open("models/fine_roberta_5_oversample_epoch", "rb") as file:
+with open("models/2e-05_fine_roberta_3_epoch", "rb") as file:
     model = pickle.load(file)
 nlp = pipeline('question-answering', model=model, tokenizer="deepset/roberta-base-squad2")
 
@@ -40,7 +40,7 @@ for i in range(len(validate_set)):
     }
 
     for j in range(len(questions)):
-        if j == 4:
+        if j == j:
             # model query
             qa = {
                 "question": questions[j],
