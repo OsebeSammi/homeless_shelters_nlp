@@ -295,7 +295,10 @@ def start(data_file, pred_file):
     dataset = dataset_json['data']
   with open(pred_file) as f:
     preds = json.load(f)
+  run(dataset, preds)
 
+
+def run(dataset, preds):
   na_probs = {k: 0.0 for k in preds}
   qid_to_has_ans = make_qid_to_has_ans(dataset)  # maps qid to True/False
   has_ans_qids = [k for k, v in qid_to_has_ans.items() if v]
