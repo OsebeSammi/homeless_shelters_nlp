@@ -3,6 +3,9 @@ from typing import Optional, Tuple
 import torch
 import torch.utils.checkpoint
 from torch import nn
+import sys
+
+MODE = sys.argv[4]
 
 
 class RobertaSelfAttention(nn.Module):
@@ -37,17 +40,86 @@ class RobertaSelfAttention(nn.Module):
         x = x.view(new_x_shape)
         return x.permute(0, 2, 1, 3)
 
-    def cross_sentence(
+    def cross_sentence_2(
             self,
             hidden_states: torch.Tensor,
-            scale: bool
+            sep_indices: torch.FloatTensor,
+            attention_mask: torch.FloatTensor,
+            cross_type: int,
+            scale: Optional[bool] = False,
+            roll_step: Optional[int] = -1
     ) -> Tuple[torch.Tensor]:
         # load
-        query_layer = self.query(hidden_states)
-        key_layer = self.key(hidden_states)
-        value_layer = self.value(hidden_states)
+        question = torch.ones_like(hidden_states)
+        context = torch.ones_like(hidden_states)
+        means = torch.ones_like(hidden_states)
+        # separate Questions and Context
+        if scale:
+            for i, qc_pair in enumerate(hidden_states):
+                sep = sep_indices[i][0]
+                sep_2 = sep_indices[i][2]
+                means[i, :] = torch.max(hidden_states[i][:sep], 0).values
+                question[i][:sep] = hidden_states[i][:sep]     # question
+                question[i][sep:] = hidden_states[i][hidden_states.shape[1]-1]
+                context[i][:sep_2-sep] = hidden_states[i][sep:sep_2]       # context
+                context[i][sep_2 - sep:] = hidden_states[i][hidden_states.shape[1]-1]
+                # similarity[i] = torch.nn.functional.cosine_similarity(mean, context[i])
+        else:
+            for i, qc_pair in enumerate(hidden_states):
+                sep = sep_indices[i][0]
+                sep_2 = sep_indices[i][2]
+                question[i][:sep] = hidden_states[i][:sep]     # question
+                question[i][sep:] = hidden_states[i][hidden_states.shape[1]-1]
+                context[i][:sep_2-sep] = hidden_states[i][sep:sep_2]       # context
+                context[i][sep_2 - sep:] = hidden_states[i][hidden_states.shape[1]-1]
+
+        # torch.autograd.set_detect_anomaly(True)
+        # similarity = torch.nn.functional.cosine_similarity(means, context)
+        # similarity = torch.nn.functional.cosine_similarity(means, hidden_states)
+        # new_shape = (similarity.shape[0], 1, similarity.shape[1])
+        # context_cos = torch.mul(context, similarity.reshape(new_shape))
+        # hidden_states_cos = torch.mul(hidden_states, similarity.reshape(new_shape))
+        hidden_states_diff = hidden_states - means
+        hidden_states_add = hidden_states + means
+
+        # cross type
+        # query = self.query(question)
+        # key = self.key(context_cos)
+        #
+        # if cross_type == 0:
+        #     value = self.value(hidden_states)                         # hidden, question, context?
+        # elif cross_type == 1:
+        #     value = self.value(context_cos)
+        # else:
+        #     value = self.value(question)
 
         # transform
+        query = self.query(hidden_states)
+        if cross_type == 1:
+            key = self.key(context)
+        elif cross_type == 2:
+            key = self.key(question)
+        else:
+            key = self.key(hidden_states_add)
+        value = self.value(hidden_states)
+
+        query_layer = self.transpose_for_scores(query)
+        key_layer = self.transpose_for_scores(key)
+        value_layer = self.transpose_for_scores(value)
+
+        # Take the dot product between "query" and "key" to get the raw attention scores.
+        attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))
+
+        # to avoid vanishing scores
+        attention_scores = attention_scores / math.sqrt(self.attention_head_size)
+
+        # add mask
+        attention_scores = attention_scores + attention_mask
+
+        # Normalize the attention scores to probabilities.
+        attention_probs = nn.functional.softmax(attention_scores, dim=-1)
+        attention_probs = self.dropout(attention_probs)
+        return torch.matmul(attention_probs, value_layer)
 
     def forward(
             self,
@@ -58,6 +130,7 @@ class RobertaSelfAttention(nn.Module):
             encoder_attention_mask: Optional[torch.FloatTensor] = None,
             past_key_value: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
             output_attentions: Optional[bool] = False,
+            sep_indices: Optional[torch.FloatTensor] = None
     ) -> Tuple[torch.Tensor]:
         mixed_query_layer = self.query(hidden_states)
 
@@ -131,7 +204,14 @@ class RobertaSelfAttention(nn.Module):
         if head_mask is not None:
             attention_probs = attention_probs * head_mask
 
-        context_layer = torch.matmul(attention_probs, value_layer)
+        if MODE == -1:
+            context_layer = torch.matmul(attention_probs, value_layer)
+        elif MODE >= 0:
+            context_layer = self.cross_sentence_2(hidden_states, sep_indices, attention_mask, MODE, True)
+        else:
+            context_layer = torch.matmul(attention_probs, value_layer) + self.cross_sentence_2(hidden_states,
+                                                                                              sep_indices,
+                                                                                              attention_mask, 1)
 
         context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = context_layer.size()[:-2] + (self.all_head_size,)
