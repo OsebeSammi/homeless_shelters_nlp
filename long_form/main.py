@@ -87,13 +87,16 @@ squad = load_dataset("squad_v2")
 tokenized_squad = squad.map(preprocess_function, batched=True, remove_columns=squad["train"].column_names)
 data_collator = DefaultDataCollator()
 
-# device
-# if torch.has_mps:
-#     device = torch.device('mps')
-# else:
-#     device = torch.device('cpu')
-# model.to(device)
-# print("MOVING TO", device)
+# move to most 'fastest' device
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device('cpu')
+    # if torch.has_mps:
+    #     device = torch.device('mps')
+    # else:
+    #     device = torch.device('cpu')
+model.to(device)
 
 # train
 training_args = TrainingArguments(
