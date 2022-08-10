@@ -75,6 +75,32 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
             Positions are clamped to the length of the sequence (`sequence_length`). Position outside of the sequence
             are not taken into account for computing the loss.
         """
+
+        # move to most 'fastest' device
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+        else:
+            device = torch.device('cpu')
+        # print("DEVICE", device)
+        if device.type != 'cpu':
+            self.to(device)
+            if input_ids is not None:
+                input_ids = input_ids.to(device)  # don't understand documentation says this should be inplace!!
+            if attention_mask is not None:
+                attention_mask = attention_mask.to(device)
+            if token_type_ids is not None:
+                token_type_ids = token_type_ids.to(device)
+            if position_ids is not None:
+                position_ids = position_ids.to(device)
+            if head_mask is not None:
+                head_mask = head_mask.to(device)
+            if inputs_embeds is not None:
+                inputs_embeds = inputs_embeds.to(device)
+            if start_positions is not None:
+                start_positions = start_positions.to(device)
+            if end_positions is not None:
+                end_positions = end_positions.to(device)
+
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
         outputs = self.roberta(
