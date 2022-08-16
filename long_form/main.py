@@ -44,12 +44,13 @@ def preprocess_function(examples):
 
         # no answer
         if len(answer["answer_start"]) == 0:
-            start_positions.append(0)
-            end_positions.append(0)
-            continue
-
-        start_char = answer["answer_start"][0]
-        end_char = answer["answer_start"][0] + len(answer["text"][0])
+            # start_positions.append(0)
+            # end_positions.append(0)
+            start_char = 0
+            end_char = 0
+        else:
+            start_char = answer["answer_start"][0]
+            end_char = answer["answer_start"][0] + len(answer["text"][0])
         sequence_ids = inputs.sequence_ids(i)
 
         # Find the start and end of the context
@@ -62,7 +63,10 @@ def preprocess_function(examples):
         context_end = idx - 1
 
         # If the answer is not fully inside the context, label it (0, 0)
-        if offset[context_start][0] > end_char or offset[context_end][1] < start_char:
+        if start_char == 0 and end_char == 0:
+            start_positions.append(0)
+            end_positions.append(0)
+        elif offset[context_start][0] > end_char or offset[context_end][1] < start_char:
             start_positions.append(0)
             end_positions.append(0)
         else:
