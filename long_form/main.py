@@ -3,7 +3,7 @@ import json
 from datasets import load_dataset
 from transformers import AutoTokenizer, DefaultDataCollator, Trainer, TrainingArguments, pipeline
 from qa_head import RobertaForQuestionAnswering
-import nlp.evaluate as squad_eval
+import evaluate as squad_eval
 from tqdm import tqdm
 import torch
 import sys
