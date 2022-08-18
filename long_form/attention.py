@@ -5,7 +5,9 @@ import torch.utils.checkpoint
 from torch import nn
 import sys
 
-MODE = sys.argv[4]
+MODE = int(sys.argv[4])
+POOL = str(sys.argv[5])
+# MODE = 0
 
 
 class RobertaSelfAttention(nn.Module):
@@ -58,12 +60,12 @@ class RobertaSelfAttention(nn.Module):
             for i, qc_pair in enumerate(hidden_states):
                 sep = sep_indices[i][0]
                 sep_2 = sep_indices[i][2]
-                means[i, :] = torch.max(hidden_states[i][:sep], 0).values
-                question[i][:sep] = hidden_states[i][:sep]     # question
-                question[i][sep:] = hidden_states[i][hidden_states.shape[1]-1]
-                context[i][:sep_2-sep] = hidden_states[i][sep:sep_2]       # context
-                context[i][sep_2 - sep:] = hidden_states[i][hidden_states.shape[1]-1]
-                # similarity[i] = torch.nn.functional.cosine_similarity(mean, context[i])
+                if POOL == "MIN":
+                    means[i, :] = torch.min(hidden_states[i][:sep], 0).values
+                elif POOL == "MAX":
+                    means[i, :] = torch.max(hidden_states[i][:sep], 0).values
+                else:
+                    means[i, :] = torch.mean(hidden_states[i][:sep], 0)
         else:
             for i, qc_pair in enumerate(hidden_states):
                 sep = sep_indices[i][0]
@@ -82,25 +84,15 @@ class RobertaSelfAttention(nn.Module):
         hidden_states_diff = hidden_states - means
         hidden_states_add = hidden_states + means
 
-        # cross type
-        # query = self.query(question)
-        # key = self.key(context_cos)
-        #
-        # if cross_type == 0:
-        #     value = self.value(hidden_states)                         # hidden, question, context?
-        # elif cross_type == 1:
-        #     value = self.value(context_cos)
-        # else:
-        #     value = self.value(question)
-
         # transform
         query = self.query(hidden_states)
-        if cross_type == 1:
-            key = self.key(context)
-        elif cross_type == 2:
-            key = self.key(question)
-        else:
+        if cross_type == 0:
+            key = self.key(hidden_states_diff)
+        elif cross_type == 1:
             key = self.key(hidden_states_add)
+        else:
+            key = self.key(question)
+
         value = self.value(hidden_states)
 
         query_layer = self.transpose_for_scores(query)
