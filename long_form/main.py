@@ -11,6 +11,7 @@ import sys
 model_name = "roberta-base"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 LOCAL = bool(sys.argv[2])
+DATA = float(sys.argv[6])
 
 
 def preprocess_function(examples):
@@ -20,7 +21,7 @@ def preprocess_function(examples):
 
     if LOCAL:
         # use 10% of the data for local
-        length = int(0.005 * len(questions))
+        length = int(DATA * len(questions))
         questions = questions[:length]
         context = context[:length]
         answers = answers[:length]
