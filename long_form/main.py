@@ -8,10 +8,13 @@ from tqdm import tqdm
 import torch
 import sys
 
-model_name = "roberta-base"
+param_path = str(sys.argv[1])
+with open(param_path, "r") as file:
+    parameters = json.load(file)
+
+DATA = parameters["data"]
+model_name = parameters["model"]
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-LOCAL = bool(sys.argv[2])
-DATA = float(sys.argv[6])
 
 
 def preprocess_function(examples):
@@ -19,7 +22,7 @@ def preprocess_function(examples):
     context = examples["context"]
     answers = examples["answers"]
 
-    if LOCAL:
+    if DATA != 1.0:
         # use 10% of the data for local
         length = int(DATA * len(questions))
         questions = questions[:length]
@@ -108,10 +111,10 @@ model.to(device)
 training_args = TrainingArguments(
     output_dir="./results",
     evaluation_strategy="epoch",
-    learning_rate=3e-5,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
-    num_train_epochs=3,
+    learning_rate=parameters["lr"],
+    per_device_train_batch_size=parameters["batch"],
+    per_device_eval_batch_size=parameters["batch"],
+    num_train_epochs=parameters["epochs"],
     weight_decay=0.01,
 )
 
@@ -124,10 +127,11 @@ trainer = Trainer(
     data_collator=data_collator,
 )
 
-trainer.train()
+# trainer.train()
 
 # save
-with open(str(sys.argv[1]), "wb") as file:
+name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"]) + "_scale" if parameters["scale"] else ""
+with open(name_trained, "wb") as file:
     pickle.dump(model, file)
 
 # test
@@ -137,7 +141,7 @@ with open(str(sys.argv[1]), "wb") as file:
 
 nlp = pipeline('question-answering', model=model, tokenizer="roberta-base")
 
-with open(str(sys.argv[3]), "r") as file:
+with open(parameters["dev"], "r") as file:
     squad_dev = json.loads(file.read())
 
 pred = {}

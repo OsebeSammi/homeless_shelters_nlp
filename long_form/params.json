@@ -1,0 +1,11 @@
+{
+  "model": "roberta-base",
+  "dev": "squad_dev.json",
+  "mode": 0,
+  "scale": true,
+  "pool": "MIN",
+  "data": 0.05,
+  "batch": 16,
+  "lr": 3e-5,
+  "epochs": 3
+}
