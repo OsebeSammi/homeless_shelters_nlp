@@ -14,6 +14,9 @@ with open(param_path, "r") as file:
 
 DATA = parameters["data"]
 model_name = parameters["model"]
+name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"])
+name_trained = name_trained + "_scale" if parameters["scale"] else name_trained + "_context"
+
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 
@@ -109,7 +112,7 @@ model.to(device)
 
 # train
 training_args = TrainingArguments(
-    output_dir="./results",
+    output_dir="./results_"+name_trained,
     evaluation_strategy="epoch",
     learning_rate=parameters["lr"],
     per_device_train_batch_size=parameters["batch"],
@@ -130,8 +133,6 @@ trainer = Trainer(
 trainer.train()
 
 # save
-name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"])
-name_trained = name_trained + "_scale" if parameters["scale"] else name_trained + "_context"
 with open(name_trained, "wb") as file:
     pickle.dump(model, file)
 
