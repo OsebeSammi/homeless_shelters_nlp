@@ -56,29 +56,49 @@ class RobertaSelfAttention(nn.Module):
             scale: Optional[bool] = False,
             roll_step: Optional[int] = -1
     ) -> Tuple[torch.Tensor]:
-        # load
-        question = torch.ones_like(hidden_states)
-        context = torch.ones_like(hidden_states)
+
         means = torch.ones_like(hidden_states)
         # separate Questions and Context
         if scale:
             for i, qc_pair in enumerate(hidden_states):
                 sep = sep_indices[i][0]
-                sep_2 = sep_indices[i][2]
                 if POOL == "MIN":
                     means[i, :] = torch.min(hidden_states[i][:sep], 0).values
                 elif POOL == "MAX":
                     means[i, :] = torch.max(hidden_states[i][:sep], 0).values
                 else:
                     means[i, :] = torch.mean(hidden_states[i][:sep], 0)
+
+            hidden_states_diff = hidden_states - means
+            hidden_states_add = hidden_states + means
+            if cross_type == 0:
+                key = self.key(hidden_states_diff)
+            else:
+                key = self.key(hidden_states_add)
+
         else:
-            for i, qc_pair in enumerate(hidden_states):
+            # question = torch.ones_like(hidden_states)
+            context = torch.clone(hidden_states)
+            for i, qc_pair in enumerate(context):
                 sep = sep_indices[i][0]
                 sep_2 = sep_indices[i][2]
-                question[i][:sep] = hidden_states[i][:sep]     # question
-                question[i][sep:] = hidden_states[i][hidden_states.shape[1]-1]
-                context[i][:sep_2-sep] = hidden_states[i][sep:sep_2]       # context
-                context[i][sep_2 - sep:] = hidden_states[i][hidden_states.shape[1]-1]
+                # question[i][:sep] = hidden_states[i][:sep]     # question
+                # question[i][sep:] = hidden_states[i][hidden_states.shape[1]-1]
+                # context[i][:sep_2-sep] = hidden_states[i][sep:sep_2]       # context
+                # context[i][sep_2 - sep:] = hidden_states[i][hidden_states.shape[1]-1]
+                context[i][:sep] = 0
+                means[i, :] = torch.mean(hidden_states[i][:sep], 0)
+
+            if cross_type == 0:
+                key = self.key(context)
+            elif cross_type == 1:
+                similarity = torch.nn.functional.cosine_similarity(means, context)
+                new_shape = (similarity.shape[0], 1, similarity.shape[1])
+                context_cos = torch.mul(context, similarity.reshape(new_shape))
+                key = self.key(context_cos)
+            else:
+                key = self.key(hidden_states)
+
 
         # torch.autograd.set_detect_anomaly(True)
         # similarity = torch.nn.functional.cosine_similarity(means, context)
@@ -86,18 +106,10 @@ class RobertaSelfAttention(nn.Module):
         # new_shape = (similarity.shape[0], 1, similarity.shape[1])
         # context_cos = torch.mul(context, similarity.reshape(new_shape))
         # hidden_states_cos = torch.mul(hidden_states, similarity.reshape(new_shape))
-        hidden_states_diff = hidden_states - means
-        hidden_states_add = hidden_states + means
+
 
         # transform
         query = self.query(hidden_states)
-        if cross_type == 0:
-            key = self.key(hidden_states_diff)
-        elif cross_type == 1:
-            key = self.key(hidden_states_add)
-        else:
-            key = self.key(question)
-
         value = self.value(hidden_states)
 
         query_layer = self.transpose_for_scores(query)
@@ -204,7 +216,7 @@ class RobertaSelfAttention(nn.Module):
         if MODE == -1:
             context_layer = torch.matmul(attention_probs, value_layer)
         elif MODE >= 0:
-            context_layer = self.cross_sentence_2(hidden_states, sep_indices, attention_mask, MODE, True)
+            context_layer = self.cross_sentence_2(hidden_states, sep_indices, attention_mask, MODE, parameters["scale"])
         else:
             context_layer = torch.matmul(attention_probs, value_layer) + self.cross_sentence_2(hidden_states,
                                                                                               sep_indices,
