@@ -127,10 +127,11 @@ trainer = Trainer(
     data_collator=data_collator,
 )
 
-# trainer.train()
+trainer.train()
 
 # save
-name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"]) + "_scale" if parameters["scale"] else ""
+name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"])
+name_trained = name_trained + "_scale" if parameters["scale"] else name_trained + "_context"
 with open(name_trained, "wb") as file:
     pickle.dump(model, file)
 
