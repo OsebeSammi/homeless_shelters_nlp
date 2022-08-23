@@ -3,9 +3,10 @@
   "dev": "squad_dev.json",
   "mode": 0,
   "scale": true,
-  "pool": "MIN",
-  "data": 0.05,
+  "pool": "SUM",
+  "data": 0.005,
   "batch": 16,
   "lr": 3e-5,
-  "epochs": 3
+  "epochs": 3,
+  "k": 0.5
 }
