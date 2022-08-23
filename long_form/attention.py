@@ -12,6 +12,7 @@ with open(param_path, "r") as file:
 
 MODE = parameters["mode"]
 POOL = parameters["pool"]
+K = parameters["k"]
 # MODE = 0
 
 
@@ -57,7 +58,7 @@ class RobertaSelfAttention(nn.Module):
             roll_step: Optional[int] = -1
     ) -> Tuple[torch.Tensor]:
 
-        means = torch.ones_like(hidden_states)
+        means = torch.zeros_like(hidden_states)
         # separate Questions and Context
         if scale:
             for i, qc_pair in enumerate(hidden_states):
@@ -68,7 +69,12 @@ class RobertaSelfAttention(nn.Module):
                 elif POOL == "MAX":
                     means[i, :] = torch.max(hidden_states[i][:sep], 0).values
                 elif POOL == "SUM":
-                    means[i, :] = torch.sum(hidden_states[i][:sep], 0)
+                    norms = torch.linalg.norm(hidden_states[i][:sep], dim=1)
+                    top_indices = torch.argsort(norms, descending=True)
+                    for j in top_indices[:int(K * len(top_indices))]:
+                        means[i, :].add(hidden_states[i][j])
+                # elif POOL == "SUM":
+                #     means[i, :] = torch.sum(hidden_states[i][:sep], 0)
                 else:
                     means[i, :] = torch.mean(hidden_states[i][:sep], 0)
 
