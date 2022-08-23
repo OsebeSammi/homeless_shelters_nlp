@@ -62,10 +62,13 @@ class RobertaSelfAttention(nn.Module):
         if scale:
             for i, qc_pair in enumerate(hidden_states):
                 sep = sep_indices[i][0]
+                sep_2 = sep_indices[i][2]
                 if POOL == "MIN":
                     means[i, :] = torch.min(hidden_states[i][:sep], 0).values
                 elif POOL == "MAX":
                     means[i, :] = torch.max(hidden_states[i][:sep], 0).values
+                elif POOL == "SUM":
+                    means[i, :] = torch.sum(hidden_states[i][:sep], 0)
                 else:
                     means[i, :] = torch.mean(hidden_states[i][:sep], 0)
 
