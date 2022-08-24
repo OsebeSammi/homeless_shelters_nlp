@@ -58,33 +58,29 @@ class RobertaSelfAttention(nn.Module):
             roll_step: Optional[int] = -1
     ) -> Tuple[torch.Tensor]:
 
-        means = torch.zeros_like(hidden_states)
+        projection = torch.zeros_like(hidden_states)
         # separate Questions and Context
         if scale:
             for i, qc_pair in enumerate(hidden_states):
                 sep = sep_indices[i][0]
-                sep_2 = sep_indices[i][2]
+                # sep_2 = sep_indices[i][2]
                 if POOL == "MIN":
-                    means[i, :] = torch.min(hidden_states[i][:sep], 0).values
+                    projection[i, :] = torch.min(hidden_states[i][:sep], 0).values
                 elif POOL == "MAX":
-                    means[i, :] = torch.max(hidden_states[i][:sep], 0).values
+                    projection[i, :] = torch.max(hidden_states[i][:sep], 0).values
                 elif POOL == "SUM":
                     norms = torch.linalg.norm(hidden_states[i][:sep], dim=1)
                     top_indices = torch.argsort(norms, descending=True)
                     for j in top_indices[:int(K * len(top_indices))]:
-                        means[i, :].add(hidden_states[i][j])
+                        projection[i, :] = projection[i, :] + hidden_states[i][j]
                 # elif POOL == "SUM":
                 #     means[i, :] = torch.sum(hidden_states[i][:sep], 0)
                 else:
-                    means[i, :] = torch.mean(hidden_states[i][:sep], 0)
+                    projection[i, :] = torch.mean(hidden_states[i][:sep], 0)
 
-            hidden_states_diff = hidden_states - means
-            hidden_states_add = hidden_states + means
-            if cross_type == 0:
-                key = self.key(hidden_states_diff)
-            else:
-                key = self.key(hidden_states_add)
-
+            # hidden_states_diff = hidden_states - projection
+            # hidden_states_add = hidden_states + projection
+            key = self.key(projection)
         else:
             # question = torch.ones_like(hidden_states)
             context = torch.clone(hidden_states)
@@ -96,33 +92,24 @@ class RobertaSelfAttention(nn.Module):
                 # context[i][:sep_2-sep] = hidden_states[i][sep:sep_2]       # context
                 # context[i][sep_2 - sep:] = hidden_states[i][hidden_states.shape[1]-1]
                 context[i][:sep] = 0
-                means[i, :] = torch.mean(hidden_states[i][:sep], 0)
+                projection[i, :] = torch.mean(hidden_states[i][:sep], 0)
 
-            if cross_type == 0:
-                key = self.key(context)
-            elif cross_type == 1:
-                similarity = torch.nn.functional.cosine_similarity(means, context)
-                new_shape = (similarity.shape[0], 1, similarity.shape[1])
-                context_cos = torch.mul(context, similarity.reshape(new_shape))
-                key = self.key(context_cos)
-            else:
-                key = self.key(hidden_states)
-
-
-        # torch.autograd.set_detect_anomaly(True)
-        # similarity = torch.nn.functional.cosine_similarity(means, context)
-        # similarity = torch.nn.functional.cosine_similarity(means, hidden_states)
-        # new_shape = (similarity.shape[0], 1, similarity.shape[1])
-        # context_cos = torch.mul(context, similarity.reshape(new_shape))
-        # hidden_states_cos = torch.mul(hidden_states, similarity.reshape(new_shape))
-
+            similarity = torch.nn.functional.cosine_similarity(projection, context)
+            new_shape = (similarity.shape[0], 1, similarity.shape[1])
+            context_cos = torch.mul(context, similarity.reshape(new_shape))
+            key = self.key(context_cos)
 
         # transform
         query = self.query(hidden_states)
+        original_key = self.key(hidden_states)
         value = self.value(hidden_states)
 
         query_layer = self.transpose_for_scores(query)
-        key_layer = self.transpose_for_scores(key)
+        if cross_type == 0:
+            key_layer = self.transpose_for_scores(original_key + key)
+        else:
+            key_layer = self.transpose_for_scores(original_key - key)
+
         value_layer = self.transpose_for_scores(value)
 
         # Take the dot product between "query" and "key" to get the raw attention scores.
