@@ -13,6 +13,8 @@ with open(param_path, "r") as file:
 MODE = parameters["mode"]
 POOL = parameters["pool"]
 K = parameters["k"]
+
+
 # MODE = 0
 
 
@@ -31,7 +33,9 @@ class RobertaSelfAttention(nn.Module):
 
         self.query = nn.Linear(config.hidden_size, self.all_head_size)
         self.key = nn.Linear(config.hidden_size, self.all_head_size)
+        self.original_key = nn.Linear(config.hidden_size, self.all_head_size)
         self.value = nn.Linear(config.hidden_size, self.all_head_size)
+        self.original_value = nn.Linear(config.hidden_size, self.all_head_size)
 
         self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
         self.position_embedding_type = position_embedding_type or getattr(
@@ -124,9 +128,9 @@ class RobertaSelfAttention(nn.Module):
         # Normalize the attention scores to probabilities.
         attention_probs = nn.functional.softmax(attention_scores, dim=-1)
         attention_probs = self.dropout(attention_probs)
-        return torch.matmul(attention_probs, value_layer)
+        return torch.matmul(attention_probs, value_layer), attention_probs
 
-    def forward(
+    def self_attention(
             self,
             hidden_states: torch.Tensor,
             attention_mask: Optional[torch.FloatTensor] = None,
@@ -134,9 +138,7 @@ class RobertaSelfAttention(nn.Module):
             encoder_hidden_states: Optional[torch.FloatTensor] = None,
             encoder_attention_mask: Optional[torch.FloatTensor] = None,
             past_key_value: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
-            output_attentions: Optional[bool] = False,
-            sep_indices: Optional[torch.FloatTensor] = None
-    ) -> Tuple[torch.Tensor]:
+    ):
         mixed_query_layer = self.query(hidden_states)
 
         # If this is instantiated as a cross-attention module, the keys
@@ -209,14 +211,26 @@ class RobertaSelfAttention(nn.Module):
         if head_mask is not None:
             attention_probs = attention_probs * head_mask
 
+        return torch.matmul(attention_probs, value_layer), attention_probs
+
+    def forward(
+            self,
+            hidden_states: torch.Tensor,
+            attention_mask: Optional[torch.FloatTensor] = None,
+            head_mask: Optional[torch.FloatTensor] = None,
+            encoder_hidden_states: Optional[torch.FloatTensor] = None,
+            encoder_attention_mask: Optional[torch.FloatTensor] = None,
+            past_key_value: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
+            output_attentions: Optional[bool] = False,
+            sep_indices: Optional[torch.FloatTensor] = None
+    ) -> Tuple[torch.Tensor]:
         if MODE == -1:
-            context_layer = torch.matmul(attention_probs, value_layer)
-        elif MODE >= 0:
-            context_layer = self.cross_sentence_2(hidden_states, sep_indices, attention_mask, MODE, parameters["scale"])
+            context_layer, attention_probs = self.self_attention(hidden_states, attention_mask, head_mask,
+                                                                 encoder_hidden_states, encoder_attention_mask,
+                                                                 past_key_value)
         else:
-            context_layer = torch.matmul(attention_probs, value_layer) + self.cross_sentence_2(hidden_states,
-                                                                                              sep_indices,
-                                                                                              attention_mask, 1)
+            context_layer, attention_probs = self.cross_sentence_2(hidden_states, sep_indices, attention_mask, MODE,
+                                                                   parameters["scale"])
 
         context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = context_layer.size()[:-2] + (self.all_head_size,)
