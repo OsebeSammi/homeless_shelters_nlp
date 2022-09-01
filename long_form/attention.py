@@ -59,7 +59,7 @@ class RobertaSelfAttention(nn.Module):
             attention_mask: torch.FloatTensor,
             cross_type: int,
             scale: Optional[bool] = False,
-            roll_step: Optional[int] = -1
+            max_ids: Optional = None
     ) -> Tuple[torch.Tensor]:
 
         projection = torch.zeros_like(hidden_states)
@@ -73,8 +73,9 @@ class RobertaSelfAttention(nn.Module):
                 elif POOL == "MAX":
                     projection[i, :] = torch.max(hidden_states[i][:sep], 0).values
                 elif POOL == "SUM":
-                    norms = torch.linalg.norm(hidden_states[i][:sep], dim=1)
-                    top_indices = torch.argsort(norms, descending=True)
+                    # norms = torch.linalg.norm(hidden_states[i][:sep], dim=1)
+                    # top_indices = torch.argsort(norms, descending=True)
+                    top_indices = max_ids[i].indices
                     for j in top_indices[:int(K * len(top_indices))]:
                         projection[i, :] = projection[i, :] + hidden_states[i][j]
                 # elif POOL == "SUM":
@@ -222,7 +223,8 @@ class RobertaSelfAttention(nn.Module):
             encoder_attention_mask: Optional[torch.FloatTensor] = None,
             past_key_value: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
             output_attentions: Optional[bool] = False,
-            sep_indices: Optional[torch.FloatTensor] = None
+            sep_indices: Optional[torch.FloatTensor] = None,
+            max_ids: Optional = None
     ) -> Tuple[torch.Tensor]:
         if MODE == -1:
             context_layer, attention_probs = self.self_attention(hidden_states, attention_mask, head_mask,
@@ -230,7 +232,7 @@ class RobertaSelfAttention(nn.Module):
                                                                  past_key_value)
         else:
             context_layer, attention_probs = self.cross_sentence_2(hidden_states, sep_indices, attention_mask, MODE,
-                                                                   parameters["scale"])
+                                                                   parameters["scale"], max_ids)
 
         context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = context_layer.size()[:-2] + (self.all_head_size,)
