@@ -147,7 +147,7 @@ with open(parameters["dev"], "r") as file:
     squad_dev = json.loads(file.read())
 
 pred = {}
-squad_dev["data"] = squad_dev["data"][:10]
+# squad_dev["data"] = squad_dev["data"][:10]
 squad_dev = squad_dev["data"]
 for i in tqdm(range(len(squad_dev))):
     for j in range(len(squad_dev[i]["paragraphs"])):
