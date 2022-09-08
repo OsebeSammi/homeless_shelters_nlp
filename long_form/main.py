@@ -35,7 +35,7 @@ def preprocess_function(examples):
     inputs = tokenizer(
         questions,
         context,
-        max_length=384,
+        max_length=parameters["max_length"],
         truncation="only_second",
         return_offsets_mapping=True,
         padding="max_length",
