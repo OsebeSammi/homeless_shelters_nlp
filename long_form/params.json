@@ -8,5 +8,7 @@
   "batch": 16,
   "lr": 3e-5,
   "epochs": 3,
-  "k": 0.5
+  "k": 0.25,
+  "no_answer": true,
+  "max_length": 512
 }

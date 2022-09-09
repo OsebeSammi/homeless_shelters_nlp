@@ -742,6 +742,7 @@ class RobertaModel(RobertaPreTrainedModel):
             sep_indices = get_qa_sep_indices(input_ids)
             for i, tensor in enumerate(input_ids):
                 t = torch.sort(tensor[0:sep_indices[i][0]], 0, descending=True)
+                # t = torch.sort(tensor[sep_indices[i][1]: sep_indices[i][2]], 0, descending=True)
                 max_ids.append(t)
         else:
             sep_indices = None
@@ -753,6 +754,26 @@ class RobertaModel(RobertaPreTrainedModel):
             inputs_embeds=inputs_embeds,
             past_key_values_length=past_key_values_length,
         )
+
+        # debug information in cross key
+        # projection = torch.zeros_like(embedding_output)
+        # for i, qc_pair in enumerate(embedding_output):
+        #     top_indices = max_ids[i]
+        #     for j in top_indices[:int(K * len(top_indices))]:
+        #         projection[i, :] = projection[i, :] + embedding_output[i][j]
+        #     break
+        #
+        # key = embedding_output + projection
+        #
+        # from main import tokenizer
+        # embeddings = self.embeddings.word_embeddings
+        # text = ""
+        # for i in range(384):
+        #     distance = torch.norm(embeddings.weight.data - key[0][i], dim=1)
+        #     nearest = torch.argmin(distance)
+        #     text += tokenizer.decode(nearest) + " "
+        # print(text)
+
         encoder_outputs = self.encoder(
             embedding_output,
             attention_mask=extended_attention_mask,

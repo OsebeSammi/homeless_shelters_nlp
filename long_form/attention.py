@@ -67,6 +67,7 @@ class RobertaSelfAttention(nn.Module):
         if scale:
             for i, qc_pair in enumerate(hidden_states):
                 sep = sep_indices[i][0]
+                # sep_1 = sep_indices[i][1]
                 # sep_2 = sep_indices[i][2]
                 if POOL == "MIN":
                     projection[i, :] = torch.min(hidden_states[i][:sep], 0).values
@@ -76,6 +77,7 @@ class RobertaSelfAttention(nn.Module):
                     # norms = torch.linalg.norm(hidden_states[i][:sep], dim=1)
                     # top_indices = torch.argsort(norms, descending=True)
                     top_indices = max_ids[i].indices
+                    # top_indices = max_ids[i].indices + sep_indices[i][1]
                     for j in top_indices[:int(K * len(top_indices))]:
                         projection[i, :] = projection[i, :] + hidden_states[i][j]
                 # elif POOL == "SUM":
