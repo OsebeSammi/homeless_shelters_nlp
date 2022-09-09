@@ -18,6 +18,7 @@ name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"])
 name_trained = name_trained + "_scale" if parameters["scale"] else name_trained + "_context"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
+no_answer = "No answer. "
 
 
 def preprocess_function(examples):
@@ -31,6 +32,16 @@ def preprocess_function(examples):
         questions = questions[:length]
         context = context[:length]
         answers = answers[:length]
+
+    if parameters["no_answer"]:
+        # change null answers from pointing to CLS
+        for i, answer in enumerate(answers):
+            context[i] = no_answer + context[i]
+            if len(answer["answer_start"]) == 0:
+                answers[i] = {'text': [no_answer], 'answer_start': [0]}
+            else:
+                for j, ans_start in enumerate(answer["answer_start"]):
+                    answers[i]["answer_start"][j] = len(no_answer) + answer["answer_start"][j]
 
     inputs = tokenizer(
         questions,
@@ -75,8 +86,15 @@ def preprocess_function(examples):
             end_positions.append(0)
         elif offset[context_start][0] > end_char or offset[context_end][1] < start_char:
             # If the answer is not fully inside the context, label it (0, 0)
-            start_positions.append(0)
-            end_positions.append(0)
+            if parameters["no_answer"]:
+                # using no answer token
+                start_positions.append(context_start)
+                end_positions.append(context_start + 1)
+            else:
+                # If the answer is not fully inside the context, label it (0, 0)
+                # use [CLS]
+                start_positions.append(0)
+                end_positions.append(0)
         else:
             # Otherwise it's the start and end token positions
             idx = context_start
@@ -154,12 +172,12 @@ for i in tqdm(range(len(squad_dev))):
         for k in range(len(squad_dev[i]["paragraphs"][j]["qas"])):
             qa = {
                 "question": squad_dev[i]["paragraphs"][j]["qas"][k]["question"],
-                "context": squad_dev[i]["paragraphs"][j]["context"]
+                "context": no_answer + squad_dev[i]["paragraphs"][j]["context"]
             }
 
             answer = nlp(qa)
 
-            if answer["score"] < 0.1:
+            if parameters["no_answer"] and no_answer in answer["answer"]:
                 # no answer
                 pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = ""
             else:
