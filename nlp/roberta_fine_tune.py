@@ -1,17 +1,24 @@
 import pickle
 from datasets import Dataset
-from utilities import get_annotated_data, get_annotated_empty, oversample_annotated_data
-from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline, Trainer, TrainingArguments
+from utilities import get_annotated_data, oversample_annotated_data
+from transformers import AutoModelForQuestionAnswering, AutoTokenizer, Trainer, TrainingArguments
 from transformers import DefaultDataCollator
 import json
 import pandas as pd
 import sys
-import numpy as np
+from roberta import RobertaForQuestionAnswering
 
 # model_name = "deepset/roberta-base-squad2"
 model_name = "deepset/roberta-base-squad2"
-model = AutoModelForQuestionAnswering.from_pretrained(model_name)
+# model = AutoModelForQuestionAnswering.from_pretrained(model_name)
+model = RobertaForQuestionAnswering.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+# params
+max_length = 512
+lr = 3e-5
+epochs = 3
+batch = 8
 
 
 def preprocess_function(data):
@@ -19,7 +26,7 @@ def preprocess_function(data):
     inputs = tokenizer(
         data["questions"],
         data["contexts"],
-        max_length=384,
+        max_length=max_length,
         truncation="only_second",
         return_offsets_mapping=True,
         padding="max_length",
@@ -45,8 +52,12 @@ def preprocess_function(data):
             idx += 1
         context_end = idx - 1
 
+        if start_char == 0 and end_char == 0:
+            # Answer does not exist
+            start_positions.append(0)
+            end_positions.append(0)
         # If the answer is not fully inside the context, label it (0, 0)
-        if offset[context_start][0] > end_char or offset[context_end][1] < start_char:
+        elif offset[context_start][0] > end_char or offset[context_end][1] < start_char:
             start_positions.append(0)
             end_positions.append(0)
         else:
@@ -113,16 +124,13 @@ tokenized_eval = my_squad_eval.map(preprocess_function, batched=True)
 
 data_collator = DefaultDataCollator()
 
-# learning rate
-lr = float(sys.argv[1])
-
 training_args = TrainingArguments(
     output_dir="output",
     evaluation_strategy="epoch",
     learning_rate=lr,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=8,
-    num_train_epochs=5,
+    per_device_train_batch_size=batch,
+    per_device_eval_batch_size=batch,
+    num_train_epochs=epochs,
     weight_decay=0.01,
 )
 
@@ -136,5 +144,5 @@ trainer = Trainer(
 )
 
 trainer.train()
-with open("models/fine_roberta_5_oversample_epoch", "wb") as file:
+with open("models/roberta_cross", "wb") as file:
     pickle.dump(model, file)
