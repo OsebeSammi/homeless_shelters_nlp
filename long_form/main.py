@@ -16,6 +16,7 @@ DATA = parameters["data"]
 model_name = parameters["model"]
 name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"])
 name_trained = name_trained + "_scale" if parameters["scale"] else name_trained + "_context"
+name_trained = name_trained + "_" + str(parameters["no_answer"])
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 no_answer = "No answer. "
@@ -150,15 +151,6 @@ trainer = Trainer(
 
 trainer.train()
 
-# save
-with open(name_trained, "wb") as file:
-    pickle.dump(model, file)
-
-# test
-# device = torch.device('cpu')
-# print("MOVING TO", device)
-# model.to(device)
-
 nlp = pipeline('question-answering', model=model, tokenizer="roberta-base")
 
 with open(parameters["dev"], "r") as file:
@@ -170,21 +162,36 @@ squad_dev = squad_dev["data"]
 for i in tqdm(range(len(squad_dev))):
     for j in range(len(squad_dev[i]["paragraphs"])):
         for k in range(len(squad_dev[i]["paragraphs"][j]["qas"])):
-            qa = {
-                "question": squad_dev[i]["paragraphs"][j]["qas"][k]["question"],
-                "context": no_answer + squad_dev[i]["paragraphs"][j]["context"]
-            }
+            if parameters["no_answer"]:
+                qa = {
+                    "question": squad_dev[i]["paragraphs"][j]["qas"][k]["question"],
+                    "context": no_answer + squad_dev[i]["paragraphs"][j]["context"]
+                }
 
-            answer = nlp(qa)
+                answer = nlp(qa)
 
-            if parameters["no_answer"] and no_answer in answer["answer"]:
-                # no answer
-                pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = ""
+                if no_answer in answer["answer"]:
+                    # no answer
+                    pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = ""
+                else:
+                    # has answer
+                    pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = answer["answer"]
             else:
-                # has answer
+                qa = {
+                    "question": squad_dev[i]["paragraphs"][j]["qas"][k]["question"],
+                    "context": squad_dev[i]["paragraphs"][j]["context"]
+                }
+
+                answer = nlp(qa)
+
                 pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = answer["answer"]
 
 
 # results = squad_eval.start("squad_dev.json", "squad_pred.json")
 results = squad_eval.run(squad_dev, pred)
 print(results)
+
+# save
+model.to(torch.device('cpu'))
+with open(name_trained, "wb") as file:
+    pickle.dump(model, file)
