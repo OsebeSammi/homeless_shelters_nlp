@@ -3,22 +3,20 @@ from datasets import Dataset
 from utilities import get_annotated_data, oversample_annotated_data
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, Trainer, TrainingArguments
 from transformers import DefaultDataCollator
-import json
 import pandas as pd
-import sys
 from roberta import RobertaForQuestionAnswering
 
+model_name = "roberta-base"
 # model_name = "deepset/roberta-base-squad2"
-model_name = "deepset/roberta-base-squad2"
 # model = AutoModelForQuestionAnswering.from_pretrained(model_name)
 model = RobertaForQuestionAnswering.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # params
 max_length = 512
-lr = 3e-5
-epochs = 3
-batch = 8
+lr = 1.5e-5
+epochs = 2
+batch = 4
 
 
 def preprocess_function(data):
@@ -144,5 +142,5 @@ trainer = Trainer(
 )
 
 trainer.train()
-with open("models/roberta_cross", "wb") as file:
+with open("models/roberta_base_cross", "wb") as file:
     pickle.dump(model, file)

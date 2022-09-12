@@ -1,10 +1,9 @@
-from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline
-import json
+from transformers import pipeline
 import pandas as pd
 import pickle
+import evaluate as squad_eval
 
-
-with open("models/2e-05_fine_roberta_3_epoch", "rb") as file:
+with open("models/roberta_cross_3", "rb") as file:
     model = pickle.load(file)
 nlp = pipeline('question-answering', model=model, tokenizer="deepset/roberta-base-squad2")
 
@@ -94,8 +93,6 @@ gold = {
         }
     ]
 }
-with open("output/gold.json", "w") as file:
-    file.writelines(json.dumps(gold))
 
-with open("output/pred.json", "w") as file:
-    file.writelines(json.dumps(pred))
+results = squad_eval.run(gold["data"], pred)
+print(results)
