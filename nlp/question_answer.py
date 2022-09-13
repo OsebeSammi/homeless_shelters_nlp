@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 import evaluate as squad_eval
 
-with open("models/roberta_cross_3", "rb") as file:
+with open("models/roberta_cross_1.5e-5", "rb") as file:
     model = pickle.load(file)
 nlp = pipeline('question-answering', model=model, tokenizer="deepset/roberta-base-squad2")
 

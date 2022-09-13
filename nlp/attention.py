@@ -3,10 +3,17 @@ from typing import Optional, Tuple
 import torch
 import torch.utils.checkpoint
 from torch import nn
+import sys
+import json
 
-MODE = 0
-POOL = True
-K = 0.25
+# params
+param_path = str(sys.argv[1])
+with open(param_path, "r") as file:
+    parameters = json.load(file)
+
+MODE = parameters["mode"]
+POOL = parameters["pool"]
+K = parameters["k"]
 
 
 # MODE = 0

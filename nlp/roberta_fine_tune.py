@@ -5,18 +5,34 @@ from transformers import AutoModelForQuestionAnswering, AutoTokenizer, Trainer, 
 from transformers import DefaultDataCollator
 import pandas as pd
 from roberta import RobertaForQuestionAnswering
+import sys
+import json
+import torch
 
-model_name = "roberta-base"
 # model_name = "deepset/roberta-base-squad2"
 # model = AutoModelForQuestionAnswering.from_pretrained(model_name)
-model = RobertaForQuestionAnswering.from_pretrained(model_name)
-tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # params
-max_length = 512
-lr = 1.5e-5
-epochs = 2
-batch = 4
+param_path = str(sys.argv[1])
+with open(param_path, "r") as file:
+    parameters = json.load(file)
+
+max_length = parameters["max_length"]
+lr = parameters["lr"]
+epochs = parameters["epochs"]
+batch = parameters["batch"]
+no_ans = parameters["no_answer"]
+model_name = parameters["model"]
+no_answer = "No answer. "
+
+# model and tokenizer
+model = RobertaForQuestionAnswering.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device('cpu')
+model.to(device)
 
 
 def preprocess_function(data):
@@ -29,6 +45,16 @@ def preprocess_function(data):
         return_offsets_mapping=True,
         padding="max_length",
     )
+
+    if no_ans:
+        # change null answers from pointing to CLS
+        for i, answer in enumerate(data["answers"]):
+            data["contexts"][i] = no_answer + data["contexts"][i]
+            if len(answer["answer_start"]) == 0:
+                data["answers"][i] = {'text': [no_answer], 'answer_start': [0]}
+            else:
+                for j, ans_start in enumerate(answer["answer_start"]):
+                    data["answers"][i]["answer_start"][j] = len(no_answer) + answer["answer_start"][j]
 
     offset_mapping = inputs.pop("offset_mapping")
     start_positions = []
@@ -56,8 +82,15 @@ def preprocess_function(data):
             end_positions.append(0)
         # If the answer is not fully inside the context, label it (0, 0)
         elif offset[context_start][0] > end_char or offset[context_end][1] < start_char:
-            start_positions.append(0)
-            end_positions.append(0)
+            if no_ans:
+                # using no answer token
+                start_positions.append(context_start)
+                end_positions.append(context_start + 1)
+            else:
+                # If the answer is not fully inside the context, label it (0, 0)
+                # use [CLS]
+                start_positions.append(0)
+                end_positions.append(0)
         else:
             # Otherwise it's the start and end token positions
             idx = context_start
@@ -142,5 +175,10 @@ trainer = Trainer(
 )
 
 trainer.train()
-with open("models/roberta_base_cross", "wb") as file:
+model.to(torch.device('cpu'))
+
+file_name = model_name + "_" + lr + "_" + epochs + "_" + str(no_ans)
+with open("models/" + file_name, "wb") as file:
     pickle.dump(model, file)
+
+print(parameters)

@@ -1,0 +1,11 @@
+{
+  "model": "roberta-base",
+  "mode": 0,
+  "pool": "SUM",
+  "batch": 8,
+  "lr": 1.5e-5,
+  "epochs": 6,
+  "k": 0.25,
+  "no_answer": true,
+  "max_length": 512
+}
