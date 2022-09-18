@@ -16,10 +16,12 @@ DATA = parameters["data"]
 model_name = parameters["model"]
 name_trained = str(parameters["pool"]) + "_" + str(parameters["mode"])
 name_trained = name_trained + "_scale" if parameters["scale"] else name_trained + "_context"
-name_trained = name_trained + "_" + str(parameters["no_answer"])
+name_trained = name_trained + "_" + str(parameters["no_answer"]) + "_" + str(parameters["lr"]) + "_" + \
+               str(parameters["epochs"])
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-no_answer = "No answer. "
+no_answer = "No answer"
+space = ". "
 
 
 def preprocess_function(examples):
@@ -37,12 +39,12 @@ def preprocess_function(examples):
     if parameters["no_answer"]:
         # change null answers from pointing to CLS
         for i, answer in enumerate(answers):
-            context[i] = no_answer + context[i]
+            context[i] = no_answer + space + context[i]
             if len(answer["answer_start"]) == 0:
                 answers[i] = {'text': [no_answer], 'answer_start': [0]}
             else:
                 for j, ans_start in enumerate(answer["answer_start"]):
-                    answers[i]["answer_start"][j] = len(no_answer) + answer["answer_start"][j]
+                    answers[i]["answer_start"][j] = len(no_answer) + len(space) + answer["answer_start"][j]
 
     inputs = tokenizer(
         questions,
@@ -138,6 +140,8 @@ training_args = TrainingArguments(
     per_device_eval_batch_size=parameters["batch"],
     num_train_epochs=parameters["epochs"],
     weight_decay=0.01,
+    save_strategy="steps",
+    save_steps=10000
 )
 
 trainer = Trainer(
@@ -165,7 +169,7 @@ for i in tqdm(range(len(squad_dev))):
             if parameters["no_answer"]:
                 qa = {
                     "question": squad_dev[i]["paragraphs"][j]["qas"][k]["question"],
-                    "context": no_answer + squad_dev[i]["paragraphs"][j]["context"]
+                    "context": no_answer + space + squad_dev[i]["paragraphs"][j]["context"]
                 }
 
                 answer = nlp(qa)
@@ -195,3 +199,4 @@ print(results)
 model.to(torch.device('cpu'))
 with open(name_trained, "wb") as file:
     pickle.dump(model, file)
+print(parameters)

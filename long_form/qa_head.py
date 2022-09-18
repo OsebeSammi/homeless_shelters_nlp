@@ -20,6 +20,7 @@ from roberta import (
     _CONFIG_FOR_DOC
 )
 
+FLAG_START_END = True
 
 @add_start_docstrings(
     """
@@ -137,7 +138,14 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
             loss_fct = CrossEntropyLoss(ignore_index=ignored_index)
             start_loss = loss_fct(start_logits, start_positions)
             end_loss = loss_fct(end_logits, end_positions)
-            total_loss = (start_loss + end_loss) / 2
+
+            global FLAG_START_END
+            if FLAG_START_END:
+                total_loss = start_loss
+                FLAG_START_END = False
+            else:
+                total_loss = end_loss
+                FLAG_START_END = True
 
         if not return_dict:
             output = (start_logits, end_logits) + outputs[2:]
