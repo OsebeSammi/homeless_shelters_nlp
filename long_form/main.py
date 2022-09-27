@@ -27,15 +27,20 @@ with open("token_map.json", "r") as file:
     synonyms = json.loads(file.read())
 
 
-def synonym_er(text):
-    words = text.split(" ")
-    synonym_ed = ""
-    for word in words:
-        if word in synonyms:
-            synonym_ed += " " + synonyms[word]
-        else:
-            synonym_ed += " " + word
-    return synonym_ed
+def synonym_er(texts):
+    results = []
+    for i in range(len(texts)):
+        text = texts[i]
+        words = text.split(" ")
+        synonym_ed = ""
+        for word in words:
+            if word in synonyms:
+                synonym_ed += " " + synonyms[word]
+            else:
+                synonym_ed += " " + word
+        results.append(synonym_ed)
+
+    return results
 
 
 def preprocess_function(examples):
@@ -43,14 +48,8 @@ def preprocess_function(examples):
     context = examples["context"]
     answers = examples["answers"]
 
-    synonym_question = []
-    synonym_context = []
-    for i in range(len(questions)):
-        q = synonym_er(questions[i])
-        synonym_question.append(q)
-
-        c = synonym_er(context[i])
-        synonym_context.append(c)
+    synonym_question = synonym_er(questions)
+    synonym_context = synonym_er(context)
 
     if DATA != 1.0:
         # use 10% of the data for local
@@ -188,7 +187,7 @@ trainer = Trainer(
     data_collator=data_collator,
 )
 
-trainer.train()
+# trainer.train()
 
 nlp = pipeline('question-answering', model=model, tokenizer="roberta-base")
 
@@ -196,7 +195,6 @@ with open(parameters["dev"], "r") as file:
     squad_dev = json.loads(file.read())
 
 pred = {}
-# squad_dev["data"] = squad_dev["data"][:10]
 squad_dev = squad_dev["data"]
 for i in tqdm(range(len(squad_dev))):
     for j in range(len(squad_dev[i]["paragraphs"])):
