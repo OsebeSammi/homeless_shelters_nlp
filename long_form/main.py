@@ -23,11 +23,34 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 no_answer = "No answer"
 space = ". "
 
+with open("token_map.json", "r") as file:
+    synonyms = json.loads(file.read())
+
+
+def synonym_er(text):
+    words = text.split(" ")
+    synonym_ed = ""
+    for word in words:
+        if word in synonyms:
+            synonym_ed += " " + synonyms[word]
+        else:
+            synonym_ed += " " + word
+    return synonym_ed
+
 
 def preprocess_function(examples):
     questions = [q.strip() for q in examples["question"]]
     context = examples["context"]
     answers = examples["answers"]
+
+    synonym_question = []
+    synonym_context = []
+    for i in range(len(questions)):
+        q = synonym_er(questions[i])
+        synonym_question.append(q)
+
+        c = synonym_er(context[i])
+        synonym_context.append(c)
 
     if DATA != 1.0:
         # use 10% of the data for local
@@ -35,6 +58,8 @@ def preprocess_function(examples):
         questions = questions[:length]
         context = context[:length]
         answers = answers[:length]
+        synonym_question = synonym_question[:length]
+        synonym_context = synonym_context[:length]
 
     if parameters["no_answer"]:
         # change null answers from pointing to CLS
@@ -49,6 +74,15 @@ def preprocess_function(examples):
     inputs = tokenizer(
         questions,
         context,
+        max_length=parameters["max_length"],
+        truncation="only_second",
+        return_offsets_mapping=True,
+        padding="max_length",
+    )
+
+    synonyms = tokenizer(
+        synonym_question,
+        synonym_context,
         max_length=parameters["max_length"],
         truncation="only_second",
         return_offsets_mapping=True,
@@ -112,6 +146,7 @@ def preprocess_function(examples):
 
     inputs["start_positions"] = start_positions
     inputs["end_positions"] = end_positions
+    inputs["synonyms"] = synonyms.data["input_ids"]
     return inputs
 
 
