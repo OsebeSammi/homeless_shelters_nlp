@@ -7,6 +7,7 @@ import evaluate as squad_eval
 from tqdm import tqdm
 import torch
 import sys
+import numpy as np
 
 param_path = str(sys.argv[1])
 with open(param_path, "r") as file:
@@ -23,7 +24,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 no_answer = "No answer"
 space = ". "
 
-with open("token_map.json", "r") as file:
+with open("squad_synonyms.json", "r") as file:
     synonyms = json.loads(file.read())
 
 
@@ -187,7 +188,7 @@ trainer = Trainer(
     data_collator=data_collator,
 )
 
-# trainer.train()
+trainer.train()
 
 nlp = pipeline('question-answering', model=model, tokenizer="roberta-base")
 
@@ -196,32 +197,87 @@ with open(parameters["dev"], "r") as file:
 
 pred = {}
 squad_dev = squad_dev["data"]
-for i in tqdm(range(len(squad_dev))):
+
+# preprocess test data
+questions = []
+contexts = []
+squad_ids = []
+for i in range(len(squad_dev)):
     for j in range(len(squad_dev[i]["paragraphs"])):
         for k in range(len(squad_dev[i]["paragraphs"][j]["qas"])):
+            question = squad_dev[i]["paragraphs"][j]["qas"][k]["question"]
+            squad_id = squad_dev[i]["paragraphs"][j]["qas"][k]["id"]
             if parameters["no_answer"]:
-                qa = {
-                    "question": squad_dev[i]["paragraphs"][j]["qas"][k]["question"],
-                    "context": no_answer + space + squad_dev[i]["paragraphs"][j]["context"]
-                }
-
-                answer = nlp(qa)
-
-                if no_answer in answer["answer"]:
-                    # no answer
-                    pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = ""
-                else:
-                    # has answer
-                    pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = answer["answer"]
+                context = no_answer + space + squad_dev[i]["paragraphs"][j]["context"]
             else:
-                qa = {
-                    "question": squad_dev[i]["paragraphs"][j]["qas"][k]["question"],
-                    "context": squad_dev[i]["paragraphs"][j]["context"]
-                }
+                context = squad_dev[i]["paragraphs"][j]["context"]
 
-                answer = nlp(qa)
+            questions.append(question)
+            contexts.append(context)
+            squad_ids.append(squad_id)
 
-                pred[squad_dev[i]["paragraphs"][j]["qas"][k]["id"]] = answer["answer"]
+# get synonyms
+synonym_question = synonym_er(questions)
+synonym_context = synonym_er(contexts)
+
+# preprocess to chunk
+chunk_size = int(len(questions)/parameters["batch"])
+questions = np.array_split(np.array(questions), chunk_size, 0)
+contexts = np.array_split(np.array(contexts), chunk_size, 0)
+squad_ids = np.array_split(np.array(squad_ids), chunk_size, 0)
+synonym_question = np.array_split(np.array(synonym_question), chunk_size, 0)
+synonym_context = np.array_split(np.array(synonym_context), chunk_size, 0)
+
+with torch.no_grad():
+    for i in tqdm(range(len(questions))):
+        #  tokenize
+        inputs = tokenizer(
+            questions[i].tolist(),
+            contexts[i].tolist(),
+            max_length=parameters["max_length"],
+            truncation="only_second",
+            return_offsets_mapping=False,
+            padding="max_length",
+            return_tensors="pt"
+        )
+
+        synonyms = tokenizer(
+            synonym_question[i].tolist(),
+            synonym_context[i].tolist(),
+            max_length=parameters["max_length"],
+            truncation="only_second",
+            return_offsets_mapping=False,
+            padding="max_length",
+            return_tensors="pt"
+        )
+
+        inputs["synonyms"] = synonyms.data["input_ids"]
+        ids = squad_ids[i]
+
+        qa_output = model(**inputs)
+
+        # get answer
+        start_logits = qa_output.start_logits
+        end_logits = qa_output.end_logits
+        has_answer = qa_output.has_answer
+        has_answer = torch.round(has_answer)
+        sep_indices = qa_output.sep_indices
+        for x in range(len(start_logits)):
+            if has_answer[x] > 0:
+                context_start = sep_indices[x][1]
+                context_stop = sep_indices[x][2]
+                start = context_start + torch.argmax(start_logits[x][context_start:])
+                end = start + torch.argmax(end_logits[x][start:]) + 1
+                if start >= context_stop:
+                    text = ""
+                else:
+                    if end > context_stop:
+                        end = context_stop
+                    tokens = inputs.data["input_ids"][x][start: end]
+                    text = tokenizer.decode(tokens)
+            else:
+                text = ""
+            pred[ids[x]] = text.strip()
 
 
 # results = squad_eval.start("squad_dev.json", "squad_pred.json")
