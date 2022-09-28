@@ -52,11 +52,26 @@ def process_squad(squad):
                             word_map[synonym] = word
 
 
-wikitext["train"].map(process_wiki, batched=True, remove_columns=wikitext["train"].column_names)
+# wikitext["train"].map(process_wiki, batched=True, remove_columns=wikitext["train"].column_names)
 squad["train"].map(process_squad, batched=True, remove_columns=squad["train"].column_names)
 squad["validation"].map(process_squad, batched=True, remove_columns=squad["validation"].column_names)
+# squad test
+with open("squad_dev.json", "r") as file:
+    squad_dev = json.loads(file.read())
+squad_dev = squad_dev["data"]
 
+questions = []
+contexts = []
+for i in range(len(squad_dev)):
+    for j in range(len(squad_dev[i]["paragraphs"])):
+        for k in range(len(squad_dev[i]["paragraphs"][j]["qas"])):
+            question = squad_dev[i]["paragraphs"][j]["qas"][k]["question"]
+            context = squad_dev[i]["paragraphs"][j]["context"]
+            questions.append(question)
+            contexts.append(context)
+process_squad({"question": questions, "context": contexts})
 
-with open("token_map.json", "w") as file:
+with open("squad_synonyms.json", "w") as file:
+    print(len(word_map), "pairs")
     file.write(json.dumps(word_map))
 
