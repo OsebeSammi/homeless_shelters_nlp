@@ -2,7 +2,7 @@ from typing import Optional, Tuple, Union
 import torch
 import torch.utils.checkpoint
 from torch import nn
-from torch.nn import CrossEntropyLoss
+from torch.nn import CrossEntropyLoss, BCELoss
 from transformers.modeling_outputs import QuestionAnsweringModelOutput
 
 from transformers.utils import (
@@ -17,10 +17,70 @@ from roberta import (
     RobertaModel,
     ROBERTA_INPUTS_DOCSTRING,
     _TOKENIZER_FOR_DOC,
-    _CONFIG_FOR_DOC
+    _CONFIG_FOR_DOC,
+    get_qa_sep_indices
 )
 
-FLAG_START_END = True
+from dataclasses import dataclass
+
+import sys
+import json
+
+param_path = str(sys.argv[1])
+with open(param_path, "r") as file:
+    parameters = json.load(file)
+
+FLAG = True
+
+
+@dataclass
+class QAOutput(QuestionAnsweringModelOutput):
+    """
+    Base class for outputs of question answering models.
+
+    Args:
+        loss (`torch.FloatTensor` of shape `(1,)`, *optional*, returned when `labels` is provided):
+            Total span extraction loss is the sum of a Cross-Entropy for the start and end positions.
+        start_logits (`torch.FloatTensor` of shape `(batch_size, sequence_length)`):
+            Span-start scores (before SoftMax).
+        end_logits (`torch.FloatTensor` of shape `(batch_size, sequence_length)`):
+            Span-end scores (before SoftMax).
+        hidden_states (`tuple(torch.FloatTensor)`, *optional*, returned when `output_hidden_states=True` is passed or when `config.output_hidden_states=True`):
+            Tuple of `torch.FloatTensor` (one for the output of the embeddings, if the model has an embedding layer, +
+            one for the output of each layer) of shape `(batch_size, sequence_length, hidden_size)`.
+
+            Hidden-states of the model at the output of each layer plus the optional initial embedding outputs.
+        attentions (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed or when `config.output_attentions=True`):
+            Tuple of `torch.FloatTensor` (one for each layer) of shape `(batch_size, num_heads, sequence_length,
+            sequence_length)`.
+
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention
+            heads.
+    """
+
+    loss: Optional[torch.FloatTensor] = None
+    start_logits: torch.FloatTensor = None
+    end_logits: torch.FloatTensor = None
+    has_answer: torch.FloatTensor = None
+    sep_indices: Tuple = None
+    hidden_states: Optional[Tuple[torch.FloatTensor]] = None
+    attentions: Optional[Tuple[torch.FloatTensor]] = None
+
+
+class Classifier(nn.Module):
+    def __init__(self, hidden_size, max_length):
+        super(Classifier, self).__init__()  # init call to super class
+        self.hidden_reduce = nn.Linear(hidden_size, max_length)
+        self.middle = nn.Linear(max_length, 1)
+        self.token_reduce = nn.Linear(max_length, 1)
+
+    def forward(self, inputs):
+        x = torch.relu(self.hidden_reduce(inputs))
+        x = torch.relu(self.middle(x))
+        x = x.squeeze()
+        x = torch.sigmoid(self.token_reduce(x))
+        return x
+
 
 @add_start_docstrings(
     """
@@ -39,6 +99,8 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
 
         self.roberta = RobertaModel(config, add_pooling_layer=False)
         self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
+        self.classifier = Classifier(config.hidden_size, parameters["max_length"])
+        # self.span_length = nn.Linear(config.hidden_size, 1)
 
         # Initialize weights and apply final processing
         self.post_init()
@@ -47,7 +109,7 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
     @add_code_sample_docstrings(
         processor_class=_TOKENIZER_FOR_DOC,
         checkpoint="roberta-base",
-        output_type=QuestionAnsweringModelOutput,
+        output_type=QAOutput,
         config_class=_CONFIG_FOR_DOC,
         expected_output="' puppet'",
         expected_loss=0.86,
@@ -64,8 +126,9 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
         end_positions: Optional[torch.LongTensor] = None,
         output_attentions: Optional[bool] = None,
         output_hidden_states: Optional[bool] = None,
+        synonyms: Optional[torch.LongTensor] = None,
         return_dict: Optional[bool] = None,
-    ) -> Union[Tuple[torch.Tensor], QuestionAnsweringModelOutput]:
+    ) -> Union[Tuple[torch.Tensor], QAOutput]:
         r"""
         start_positions (`torch.LongTensor` of shape `(batch_size,)`, *optional*):
             Labels for position (index) of the start of the labelled span for computing the token classification loss.
@@ -101,11 +164,14 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
                 start_positions = start_positions.to(device)
             if end_positions is not None:
                 end_positions = end_positions.to(device)
+            if synonyms is not None:
+                synonyms = synonyms.to(device)
 
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
         outputs = self.roberta(
             input_ids,
+            synonyms,
             attention_mask=attention_mask,
             token_type_ids=token_type_ids,
             position_ids=position_ids,
@@ -122,6 +188,9 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1).contiguous()
         end_logits = end_logits.squeeze(-1).contiguous()
+        class_logits = self.classifier(sequence_output)
+        class_logits = class_logits.view(len(class_logits))
+        # len_logits = self.span_length(sequence_output)
 
         total_loss = None
         if start_positions is not None and end_positions is not None:
@@ -139,22 +208,47 @@ class RobertaForQuestionAnswering(RobertaPreTrainedModel):
             start_loss = loss_fct(start_logits, start_positions)
             end_loss = loss_fct(end_logits, end_positions)
 
-            global FLAG_START_END
-            if FLAG_START_END:
-                total_loss = start_loss
-                FLAG_START_END = False
+            # classifier
+            loss_bin = BCELoss()
+            class_labels = start_positions + end_positions
+            class_labels = (class_labels > 0).type(torch.FloatTensor).to(class_logits.device)
+            class_loss = loss_bin(class_logits, class_labels)  # to be in similar range as start and end loss
+
+            # span length predictor
+            # span_labels = (end_positions - start_positions).to(len_logits.device)
+            # span_loss = loss_fct(len_logits, span_labels.view(class_shape))
+
+            # total_loss = (start_loss + end_loss) / 2
+            # total_loss = (start_loss + end_loss) / 2 + class_loss
+            # total_loss = (start_loss + end_loss) / 2 + class_loss + span_loss
+
+            global FLAG
+            if FLAG:
+                total_loss = class_loss
+                FLAG = False
             else:
-                total_loss = end_loss
-                FLAG_START_END = True
+                total_loss = (start_loss + end_loss) / 2
+                FLAG = True
 
         if not return_dict:
             output = (start_logits, end_logits) + outputs[2:]
             return ((total_loss,) + output) if total_loss is not None else output
 
-        return QuestionAnsweringModelOutput(
+        # return QuestionAnsweringModelOutput(
+        #     loss=total_loss,
+        #     start_logits=start_logits,
+        #     end_logits=end_logits,
+        #     hidden_states=outputs.hidden_states,
+        #     attentions=outputs.attentions,
+        # )
+        sep_indices = get_qa_sep_indices(input_ids)
+
+        return QAOutput(
             loss=total_loss,
             start_logits=start_logits,
             end_logits=end_logits,
+            has_answer=class_logits,
+            sep_indices=sep_indices,
             hidden_states=outputs.hidden_states,
             attentions=outputs.attentions,
         )

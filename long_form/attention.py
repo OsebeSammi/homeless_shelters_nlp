@@ -59,7 +59,8 @@ class RobertaSelfAttention(nn.Module):
             attention_mask: torch.FloatTensor,
             cross_type: int,
             scale: Optional[bool] = False,
-            max_ids: Optional = None
+            max_ids: Optional = None,
+            synonyms:  Optional = None
     ) -> Tuple[torch.Tensor]:
 
         projection = torch.zeros_like(hidden_states)
@@ -87,7 +88,8 @@ class RobertaSelfAttention(nn.Module):
 
             # hidden_states_diff = hidden_states - projection
             # hidden_states_add = hidden_states + projection
-            key = self.key(projection)
+            # key = self.key(projection)
+            key = self.key(synonyms + projection)
         else:
             # question = torch.ones_like(hidden_states)
             context = torch.clone(hidden_states)
@@ -226,7 +228,8 @@ class RobertaSelfAttention(nn.Module):
             past_key_value: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
             output_attentions: Optional[bool] = False,
             sep_indices: Optional[torch.FloatTensor] = None,
-            max_ids: Optional = None
+            max_ids: Optional = None,
+            synonyms: Optional = None,
     ) -> Tuple[torch.Tensor]:
         if MODE == -1:
             context_layer, attention_probs = self.self_attention(hidden_states, attention_mask, head_mask,
@@ -234,7 +237,7 @@ class RobertaSelfAttention(nn.Module):
                                                                  past_key_value)
         else:
             context_layer, attention_probs = self.cross_sentence_2(hidden_states, sep_indices, attention_mask, MODE,
-                                                                   parameters["scale"], max_ids)
+                                                                   parameters["scale"], max_ids, synonyms)
 
         context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = context_layer.size()[:-2] + (self.all_head_size,)
