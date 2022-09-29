@@ -213,7 +213,8 @@ class RobertaAttention(nn.Module):
         past_key_value: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
         output_attentions: Optional[bool] = False,
         sep_indices: Optional[torch.FloatTensor] = None,
-        max_ids: Optional = None
+        max_ids: Optional = None,
+        synonyms: Optional = None,
     ) -> Tuple[torch.Tensor]:
         self_outputs = self.self(
             hidden_states,
@@ -224,7 +225,8 @@ class RobertaAttention(nn.Module):
             past_key_value,
             output_attentions,
             sep_indices,
-            max_ids
+            max_ids,
+            synonyms
         )
         attention_output = self.output(self_outputs[0], hidden_states)
         outputs = (attention_output,) + self_outputs[1:]  # add attentions if we output them
@@ -288,7 +290,8 @@ class RobertaLayer(nn.Module):
         past_key_value: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
         output_attentions: Optional[bool] = False,
         sep_indices: Optional[torch.FloatTensor] = None,
-        max_ids: Optional = None
+        max_ids: Optional = None,
+        synonyms: Optional = None,
     ) -> Tuple[torch.Tensor]:
         # decoder uni-directional self-attention cached key/values tuple is at positions 1,2
         self_attn_past_key_value = past_key_value[:2] if past_key_value is not None else None
@@ -299,7 +302,8 @@ class RobertaLayer(nn.Module):
             output_attentions=output_attentions,
             past_key_value=self_attn_past_key_value,
             sep_indices=sep_indices,
-            max_ids=max_ids
+            max_ids=max_ids,
+            synonyms=synonyms
         )
         attention_output = self_attention_outputs[0]
 
@@ -374,6 +378,7 @@ class RobertaEncoder(nn.Module):
         output_hidden_states: Optional[bool] = False,
         sep_indices: Optional[torch.FloatTensor] = None,
         max_ids: Optional = None,
+        synonyms: Optional = None,
         return_dict: Optional[bool] = True,
     ) -> Union[Tuple[torch.Tensor], BaseModelOutputWithPastAndCrossAttentions]:
         all_hidden_states = () if output_hidden_states else None
@@ -420,7 +425,8 @@ class RobertaEncoder(nn.Module):
                     past_key_value,
                     output_attentions,
                     sep_indices,
-                    max_ids
+                    max_ids,
+                    synonyms
                 )
 
             hidden_states = layer_outputs[0]
@@ -644,6 +650,7 @@ class RobertaModel(RobertaPreTrainedModel):
     def forward(
         self,
         input_ids: Optional[torch.Tensor] = None,
+        synonyms: Optional[torch.Tensor] = None,
         attention_mask: Optional[torch.Tensor] = None,
         token_type_ids: Optional[torch.Tensor] = None,
         position_ids: Optional[torch.Tensor] = None,
@@ -755,6 +762,8 @@ class RobertaModel(RobertaPreTrainedModel):
             past_key_values_length=past_key_values_length,
         )
 
+        synonyms_embeddings = self.embeddings(input_ids=synonyms)
+
         # debug information in cross key
         # projection = torch.zeros_like(embedding_output)
         # for i, qc_pair in enumerate(embedding_output):
@@ -786,6 +795,7 @@ class RobertaModel(RobertaPreTrainedModel):
             output_hidden_states=output_hidden_states,
             sep_indices=sep_indices,
             max_ids=max_ids,
+            synonyms=synonyms_embeddings,
             return_dict=return_dict,
         )
         sequence_output = encoder_outputs[0]
