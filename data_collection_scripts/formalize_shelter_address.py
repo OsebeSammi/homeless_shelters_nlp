@@ -1,7 +1,7 @@
 import json
 import googlemaps
 
-api_key = "AIzaSyB3rZUfAkjl6d1B8wD5IDAVSP4B6RyjxGM"
+api_key = ""  # TODO refactor to take this from config
 maps = googlemaps.Client(key=api_key)
 
 
