@@ -1,0 +1,5 @@
+# Homeless Shelters NLP
+NLP Information Extraction on Short Text Corpus - A Study on USA Homeless Shelter Data
+
+# Abstract
+More than half a million people were experiencing homelessness in America on any given night in 2021, yet only around 50% of them used shelters. To address unmet needs in homelessness, we report the creation of housing for homeless (H4H), the largest comprehensive repository of emergency shelters and other housing resources, from which we deployed state-of-the-art natural language processing approaches to extract information vital to individuals ex- periencing homelessness, including admission process, service provided, duration of stay, and eligibility. We frame information extraction as a question-answer task. Using 2,055 question-answer pairs for training and evaluation, the best performing system was a two-step classification and question-answering Roberta model with prompting, achiev- ing a macro-average of 75.83 for F1 score. H4H and the annotated entries are publicly0 available as a benchmark dataset.
